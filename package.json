@@ -1,5 +1,5 @@
 {
-  "name": "multiselecter",
+  "name": "MultiSelector",
   "version": "1.0.0",
   "description": "Dependecies free javascript plugin for customization selects input elements.",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/psr1919plus21/multiselecter.git"
+    "url": "git+https://github.com/psr1919plus21/MultiSelector.git"
   },
   "keywords": [
     "multiselect",
@@ -19,9 +19,9 @@
   "author": "Philipp Gaponenko",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/psr1919plus21/multiselecter/issues"
+    "url": "https://github.com/psr1919plus21/MultiSelector/issues"
   },
-  "homepage": "https://github.com/psr1919plus21/multiselecter#readme",
+  "homepage": "https://github.com/psr1919plus21/MultiSelector#readme",
   "devDependencies": {
     "babel-core": "^6.22.1",
     "babel-loader": "^6.2.10",
