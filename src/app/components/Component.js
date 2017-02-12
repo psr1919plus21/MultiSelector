@@ -12,10 +12,15 @@ export default class Component {
         this.cid = uniqueId('cmp');
         this.preInitialize(options);
         const {el} = options;
+        const {role} = options;
         if (el) {
             this.el = el;
         }
-        if (!this.el) {
+        if (role) {
+            this.role = role;
+        }
+
+        if (!this.el && this.role !== 'mediator') {
             console.warn('New element will be created. Don`t forget append to DOM.');
             const tagName = this.tagName || 'div';
             const attrs = this.attrs || {};
@@ -63,7 +68,7 @@ export default class Component {
     }
 
     $(selector) {
-        return this.$el.find(selector);
+        return this.el.querySelectorAll(selector);
     }
 
     bindUIElements() {
