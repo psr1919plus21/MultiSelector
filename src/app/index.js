@@ -1,4 +1,4 @@
 import IndexPage from './pages/index';
 
-let indexPage = new IndexPage();
+let indexPage = new IndexPage({role: 'mediator'});
 
