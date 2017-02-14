@@ -20,20 +20,18 @@ export default class Component {
             this.role = role;
         }
 
-        if (!this.el && this.role !== 'mediator') {
-            console.warn('New element will be created. Don`t forget append to DOM.');
-            const tagName = this.tagName || 'div';
-            const attrs = this.attrs || {};
-            this.el = document.createElement('div');
-        }
-        if (this.className) {
+        if (!this.el) {
+          console.warn(`Selected DOM node – ${el} doesn\'t exist `);
+        } else {
+          if (this.className) {
             this.el.classList.add(this.className);
+          }
+          this.render();
+          this._applyBehaviors();
+          this.bindUIElements();
+          this.delegateEvents();
+          this.afterInitialize(options);
         }
-        this.render();
-        this._applyBehaviors();
-        this.bindUIElements();
-        this.delegateEvents();
-        this.afterInitialize(options);
     }
 
     preInitialize() { }
