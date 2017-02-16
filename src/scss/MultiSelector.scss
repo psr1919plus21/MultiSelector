@@ -1,0 +1,43 @@
+.ms-wrapper {
+  font-family: sans-serif;
+}
+
+.ms-title {
+  background: #fcfcfc;
+    border-radius: 1px;
+    box-shadow: 1px 1px 1px 0px #ccc;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 40px;
+    padding: 0 16px;
+    position: relative;
+
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+    &:before {
+      content: '';
+      border: 3px solid #333;
+      border-bottom-color: rgba(255,255,255,0.001);
+      border-left-color: rgba(255,255,255,0.001);
+      position: absolute;
+      right: 8px;
+      top: 14px;
+      height: 0;
+      transform: rotate(135deg);
+      width: 0;
+    }
+    &:hover {
+      background: #fafafa;
+    }
+    &:active {
+      background: #efefef;
+      box-shadow: none;
+      top: 1px;
+      left: 1px;
+    }
+}

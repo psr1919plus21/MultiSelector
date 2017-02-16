@@ -1,5 +1,8 @@
 import Component from './Component';
 
+require('../../scss/main.scss');
+require('../../scss/MultiSelector.scss');
+
 export default class MultiSelector extends Component {
 
   preInitialize() {
@@ -17,6 +20,7 @@ export default class MultiSelector extends Component {
     let msTitleTextNode;
     let msDropDown;
 
+    this.el.style.display = 'none';
     // MultiSelector wrapper.
     msSelector = document.createElement('div');
     msSelector.classList.add('ms-wrapper');
@@ -38,7 +42,6 @@ export default class MultiSelector extends Component {
 
     this.el.parentNode.insertBefore(msSelector, this.el);
 
-    // this.el.style.display = 'none';
   }
 
 }
