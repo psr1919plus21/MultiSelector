@@ -1,5 +1,8 @@
 import Component from './Component';
 
+require('../../scss/main.scss');
+require('../../scss/MultiSelector.scss');
+
 export default class MultiSelector extends Component {
 
   preInitialize() {
