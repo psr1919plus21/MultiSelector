@@ -7,8 +7,8 @@ export default class MultiSelector extends Component {
 
   preInitialize() {
     this.ui = {
-      msPlaceholder: 'option.ms-placeholder',
-      msOption: 'option:not(.ms-placeholder)',
+      msPlaceholder: 'option[value=""]',
+      msOption: 'option:not([value=""])',
       msOptgroup: 'optgroup'
     }
   }
@@ -37,11 +37,53 @@ export default class MultiSelector extends Component {
       msTitleTextNode = document.createTextNode(this.ui.msOption[0].text);
     }
 
+    // Multiselector dropdown.
+    msDropDown = document.createElement('ul');
+    msDropDown.classList.add('ms-dropdown');
+
+    let options = [];
+    this.ui.msOption.forEach((option) => {
+      let msItem = document.createElement('li');
+      msItem.classList.add('ms-dropdown__item');
+      let optionTextNode = document.createTextNode(option.innerHTML.trim());
+      msItem.appendChild(optionTextNode);
+      msDropDown.appendChild(msItem);
+    })
+
     msTitle.appendChild(msTitleTextNode);
     msSelector.appendChild(msTitle);
+    msSelector.appendChild(msDropDown);
 
     this.el.parentNode.insertBefore(msSelector, this.el);
+
+    // Events.
+    msTitle.addEventListener('click', toggleSelector);
+
+    function toggleSelector() {
+       msSelector.classList.toggle('ms-wrapper_active');
+    }
 
   }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
