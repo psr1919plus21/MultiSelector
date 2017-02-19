@@ -37,9 +37,6 @@
     &:hover {
       background: #fafafa;
     }
-    &:active {
-      background: #efefef;
-    }
 }
 
 .ms-dropdown {
@@ -53,8 +50,14 @@
   transition: height 200ms ease-in-out;
 }
 
-.ms-wrapper_active .ms-dropdown {
-  height: 203px;
+.ms-wrapper_active {
+  .ms-dropdown {
+    height: 202px;
+  }
+  .ms-title:before {
+    transform: rotate(-45deg);
+    top: 18px;
+  }
 }
 
 .ms-dropdown__item {
@@ -63,5 +66,15 @@
   &:hover {
     background: #f7f7f7;
     color: #333;
+  }
+}
+
+.ms-dropdown__item_active {
+  background: #4495cc;
+  color: #fff;
+  cursor: default;
+  &:hover {
+    background: #4495cc;
+    color: #fff;
   }
 }
