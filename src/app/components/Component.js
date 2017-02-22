@@ -12,12 +12,13 @@ export default class Component {
         this.cid = uniqueId('cmp');
         this.preInitialize(options);
         const {el} = options;
-        const {role} = options;
+        const {settings} = options;
         if (el) {
             this.el = el;
         }
-        if (role) {
-            this.role = role;
+
+        if (settings) {
+          this.settings = settings;
         }
 
         if (!this.el) {

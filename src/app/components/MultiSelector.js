@@ -29,8 +29,8 @@ export default class MultiSelector extends Component {
     msSelector.classList.add('ms-wrapper');
 
     //MultiSelector title
-    msTitle = document.createElement('div');
-    msTitle.classList.add('ms-title');
+    this.msTitle = document.createElement('div');
+    this.msTitle.classList.add('ms-title');
 
 
     // MultiSelector placeholder.
@@ -56,30 +56,45 @@ export default class MultiSelector extends Component {
     msItems = msDropDown.querySelectorAll('.ms-dropdown__item');
 
 
-    msTitle.appendChild(msTitleTextNode);
-    msSelector.appendChild(msTitle);
+    this.msTitle.appendChild(msTitleTextNode);
+    msSelector.appendChild(this.msTitle);
     msSelector.appendChild(msDropDown);
+
+    this._setCustomTitleIcon.call(this);
 
     this.el.parentNode.insertBefore(msSelector, this.el);
 
+
+
+
     // Events.
-    msTitle.addEventListener('click', toggleSelector);
+    this.msTitle.addEventListener('click', toggleSelector);
     msItems.forEach((item) => {
       item.addEventListener('click', selectItem);
     });
 
     function toggleSelector() {
-       msSelector.classList.toggle('ms-wrapper_active');
+      let customTitleIcon = that.msTitle.classList.contains('ms-title_custom-icon');
+      let selectOpen = !msSelector.classList.contains('ms-wrapper_active');
+
+
+
+      if (customTitleIcon && selectOpen) {
+        that.customIconBlock.style.backgroundImage = `url(${that.settings.titleIconOpen})`;
+      } else if (customTitleIcon && !selectOpen) {
+        that.customIconBlock.style.backgroundImage = `url(${that.settings.titleIconClose})`;
+      }
+      msSelector.classList.toggle('ms-wrapper_active');
     }
 
     function selectItem() {
       let dataValue = this.getAttribute('data-value');
       let dataTitle = this.innerHTML;
 
-      dropDownClose();
+      toggleSelector();
 
       setTimeout(() => {
-        msTitle.textContent = dataTitle;
+        // that.msTitle.textContent = dataTitle;
         clearSelectedOptions();
         this.classList.add('ms-dropdown__item_active');
         that.el.value = dataValue;
@@ -95,6 +110,17 @@ export default class MultiSelector extends Component {
       msItems.forEach((option) => {
         option.classList.remove('ms-dropdown__item_active');
       });
+    }
+  }
+
+  _setCustomTitleIcon() {
+    let {settings} = this;
+    if (settings.titleIconClose && settings.titleIconOpen) {
+      this.msTitle.classList.add('ms-title_custom-icon');
+      this.customIconBlock = document.createElement('div');
+      this.customIconBlock.classList.add('ms-title__icon');
+      this.customIconBlock.style.backgroundImage = `url(${this.settings.titleIconClose})`;
+      this.msTitle.appendChild(this.customIconBlock);
     }
   }
 
