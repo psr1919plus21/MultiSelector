@@ -27,8 +27,43 @@
 
       </div>
     </article>
+
+    <!-- Custom icon -->
+    <article class="ms-example">
+      <h2 class="ms-example__title">Custom icon  select</h2>
+      <div class="ms-example__content">
+
+        <div class="select-wrapper">
+          <select class="ms-select-custom-icon">
+            <option  value="" disabled selected>Select your turtle</option>
+            <option value="donatello">Donatello</option>
+            <option value="leonardo">Leonardo</option>
+            <option value="michelangelo">Michelangelo</option>
+            <option value="raphael">Raphael</option>
+          </select>
+        </div>
+
+      </div>
+    </article>
   </section>
 
   <script src="dist/multiselecter.js"></script>
+  <script>
+    var plainSelect = new MultiSelector({
+      el: document.querySelector('.ms-select'),
+      settings: {
+        titleIconClose: 'src/img/title-icon-custom-close.svg',
+        titleIconOpen: 'src/img/title-icon-custom-open.svg'
+      }
+    });
+
+    var customIconSelect = new MultiSelector({
+      el: document.querySelector('.ms-select-custom-icon'),
+      settings: {
+        titleIconClose: 'src/img/bomb.svg',
+        titleIconOpen: 'src/img/explosion.svg'
+      }
+    });
+  </script>
 </body>
 </html>
