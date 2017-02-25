@@ -15,7 +15,6 @@ export default class MultiSelector extends Component {
 
   afterInitialize() {
     let that = this;
-    let msSelector;
     let msTitle;
     let msPlaceholder;
     let msTitleTextNode;
@@ -25,8 +24,8 @@ export default class MultiSelector extends Component {
     this.el.style.display = 'none';
 
     // MultiSelector wrapper.
-    msSelector = document.createElement('div');
-    msSelector.classList.add('ms-wrapper');
+    this.msSelector = document.createElement('div');
+    this.msSelector.classList.add('ms-wrapper');
 
     //MultiSelector title
     this.msTitle = document.createElement('div');
@@ -59,57 +58,65 @@ export default class MultiSelector extends Component {
     msItems = this.msDropDown.querySelectorAll('.ms-dropdown__item');
 
     this.msTitleText.appendChild(msTitleTextNode);
-    msSelector.appendChild(this.msTitle);
-    msSelector.appendChild(this.msDropDown);
+    this.msSelector.appendChild(this.msTitle);
+    this.msSelector.appendChild(this.msDropDown);
 
+
+    // Settings handlers.
     this._setCustomTitleIcon.call(this);
     this._setDropdownNoFlow.call(this);
+    this._closeDropdownByArea.call(this);
 
-    this.el.parentNode.insertBefore(msSelector, this.el);
+    this.el.parentNode.insertBefore(this.msSelector, this.el);
 
 
     // Events.
-    this.msTitle.addEventListener('click', toggleSelector);
+    this.msTitle.addEventListener('click', toggleSelector.bind(this));
     msItems.forEach((item) => {
-      item.addEventListener('click', selectItem);
+      item.addEventListener('click', selectItem.bind(this));
     });
 
     function toggleSelector() {
+      let self = this;
       let customTitleIcon = that.msTitle.classList.contains('ms-title_custom-icon');
-      let selectOpen = !msSelector.classList.contains('ms-wrapper_active');
+      let selectOpen = !self.msSelector.classList.contains('ms-wrapper_active');
 
       if (customTitleIcon && selectOpen) {
         that.customIconBlock.style.backgroundImage = `url(${that.settings.titleIconOpen})`;
       } else if (customTitleIcon && !selectOpen) {
         that.customIconBlock.style.backgroundImage = `url(${that.settings.titleIconClose})`;
       }
-      msSelector.classList.toggle('ms-wrapper_active');
+      self.msSelector.classList.toggle('ms-wrapper_active');
     }
 
-    function selectItem() {
-      let dataValue = this.getAttribute('data-value');
-      let dataTitle = this.innerHTML;
-      console.log(dataTitle);
+    function selectItem(e) {
+      let dataValue = e.target.getAttribute('data-value');
+      let dataTitle = e.target.innerHTML;
 
-      toggleSelector();
+      toggleSelector.call(this);
 
       setTimeout(() => {
         that.msTitleText.textContent = dataTitle;
         clearSelectedOptions();
-        this.classList.add('ms-dropdown__item_active');
+        e.target.classList.add('ms-dropdown__item_active');
         that.el.value = dataValue;
       }, 300);
 
     }
 
-    function dropDownClose() {
-      msSelector.classList.remove('ms-wrapper_active');
-    }
 
     function clearSelectedOptions() {
       msItems.forEach((option) => {
         option.classList.remove('ms-dropdown__item_active');
       });
+    }
+  }
+
+  _dropDownClose() {
+    this.msSelector.classList.remove('ms-wrapper_active');
+    let customTitleIcon = this.msTitle.classList.contains('ms-title_custom-icon');
+    if (customTitleIcon) {
+      this.customIconBlock.style.backgroundImage = `url(${this.settings.titleIconClose})`;
     }
   }
 
@@ -129,6 +136,35 @@ export default class MultiSelector extends Component {
     if (settings.dropdownNoFlow) {
       this.msDropDown.classList.add('ms-dropdown_noflow');
     }
+  }
+
+  _closeDropdownByArea() {
+    let self = this;
+    let {settings} = this;
+    if (!settings.keepOpenByAreaClick) {
+      let body = document.querySelector('body');
+    body.addEventListener('click', (e) => {
+      let isSelector = self._hasParentClass(e.target, 'ms-wrapper');
+      if (!isSelector) {
+        self._dropDownClose.call(self);
+      }
+    });
+    }
+  }
+
+  _hasParentClass(el, classname) {
+    let parent = el.parentNode;
+    let parentHasClass = false;
+
+    while(parent) {
+      if (parent.classList && parent.classList.contains(classname)) {
+        parentHasClass = true;
+        break;
+      }
+      parent = parent.parentNode;
+    }
+
+    return parentHasClass;
   }
 
 }
