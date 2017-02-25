@@ -14,7 +14,7 @@
     <article class="ms-example">
       <h2 class="ms-example__title">Simple select</h2>
       <div class="ms-example__content">
-
+        <h3>It's time to choose</h3>
         <div class="select-wrapper">
           <select class="ms-select">
             <option  value="" disabled selected>Select your turtle</option>
@@ -27,6 +27,12 @@
             <option value="michelangelo">Michelangelo</option>
             <option value="raphael">Raphael</option>
           </select>
+        </div>
+
+        <div class="container">
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis est eveniet possimus hic alias, error nemo molestias nam dicta itaque vero quia veniam iure officia expedita blanditiis quod assumenda dolores!</p>
+          <p>Obcaecati illum explicabo, hic sed aliquam beatae eum molestiae. Ad totam doloribus porro tenetur explicabo officia cupiditate voluptas, earum, asperiores, impedit illo. Et laudantium mollitia rerum accusantium nobis quis tenetur!</p>
+          <p>Quo saepe provident, veritatis officia, qui hic at deleniti vero magni ut voluptatem minus reiciendis sit exercitationem dicta molestias quas natus iusto obcaecati consequuntur animi iste! Molestias numquam, recusandae quidem.</p>
         </div>
 
       </div>
@@ -46,6 +52,11 @@
             <option value="raphael">Raphael</option>
           </select>
         </div>
+        <div class="container">
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis est eveniet possimus hic alias, error nemo molestias nam dicta itaque vero quia veniam iure officia expedita blanditiis quod assumenda dolores!</p>
+          <p>Obcaecati illum explicabo, hic sed aliquam beatae eum molestiae. Ad totam doloribus porro tenetur explicabo officia cupiditate voluptas, earum, asperiores, impedit illo. Et laudantium mollitia rerum accusantium nobis quis tenetur!</p>
+          <p>Quo saepe provident, veritatis officia, qui hic at deleniti vero magni ut voluptatem minus reiciendis sit exercitationem dicta molestias quas natus iusto obcaecati consequuntur animi iste! Molestias numquam, recusandae quidem.</p>
+        </div>
 
       </div>
     </article>
@@ -57,7 +68,8 @@
       el: document.querySelector('.ms-select'),
       settings: {
         titleIconClose: 'src/img/title-icon-custom-close.svg',
-        titleIconOpen: 'src/img/title-icon-custom-open.svg'
+        titleIconOpen: 'src/img/title-icon-custom-open.svg',
+        dropdownNoFlow: true
       }
     });
 

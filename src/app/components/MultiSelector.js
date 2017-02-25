@@ -44,8 +44,8 @@ export default class MultiSelector extends Component {
     }
 
     // Multiselector dropdown.
-    msDropDown = document.createElement('ul');
-    msDropDown.classList.add('ms-dropdown');
+    this.msDropDown = document.createElement('ul');
+    this.msDropDown.classList.add('ms-dropdown');
 
     this.ui.msOption.forEach((option) => {
       let msItem = document.createElement('li');
@@ -54,20 +54,18 @@ export default class MultiSelector extends Component {
       let optionValue = option.getAttribute('value');
       msItem.appendChild(optionTextNode);
       msItem.setAttribute('data-value', optionValue);
-      msDropDown.appendChild(msItem);
+      this.msDropDown.appendChild(msItem);
     });
-    msItems = msDropDown.querySelectorAll('.ms-dropdown__item');
-
+    msItems = this.msDropDown.querySelectorAll('.ms-dropdown__item');
 
     this.msTitleText.appendChild(msTitleTextNode);
     msSelector.appendChild(this.msTitle);
-    msSelector.appendChild(msDropDown);
+    msSelector.appendChild(this.msDropDown);
 
     this._setCustomTitleIcon.call(this);
+    this._setDropdownNoFlow.call(this);
 
     this.el.parentNode.insertBefore(msSelector, this.el);
-
-
 
 
     // Events.
@@ -126,7 +124,12 @@ export default class MultiSelector extends Component {
     }
   }
 
-
+  _setDropdownNoFlow() {
+    let {settings} = this;
+    if (settings.dropdownNoFlow) {
+      this.msDropDown.classList.add('ms-dropdown_noflow');
+    }
+  }
 
 }
 

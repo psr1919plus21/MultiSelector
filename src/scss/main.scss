@@ -2,6 +2,13 @@
 
 body {
   background: #b4b4b4;
+  font-family: sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  text-align: center;
 }
 
 .select-wrapper {
@@ -9,3 +16,7 @@ body {
   margin: 0 auto;
 }
 
+.container {
+  max-width: 260px;
+  margin: 0 auto;
+}
