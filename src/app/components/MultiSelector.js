@@ -31,6 +31,9 @@ export default class MultiSelector extends Component {
     //MultiSelector title
     this.msTitle = document.createElement('div');
     this.msTitle.classList.add('ms-title');
+    this.msTitleText = document.createElement('div');
+    this.msTitleText.classList.add('ms-title__text');
+    this.msTitle.appendChild(this.msTitleText);
 
 
     // MultiSelector placeholder.
@@ -56,7 +59,7 @@ export default class MultiSelector extends Component {
     msItems = msDropDown.querySelectorAll('.ms-dropdown__item');
 
 
-    this.msTitle.appendChild(msTitleTextNode);
+    this.msTitleText.appendChild(msTitleTextNode);
     msSelector.appendChild(this.msTitle);
     msSelector.appendChild(msDropDown);
 
@@ -77,8 +80,6 @@ export default class MultiSelector extends Component {
       let customTitleIcon = that.msTitle.classList.contains('ms-title_custom-icon');
       let selectOpen = !msSelector.classList.contains('ms-wrapper_active');
 
-
-
       if (customTitleIcon && selectOpen) {
         that.customIconBlock.style.backgroundImage = `url(${that.settings.titleIconOpen})`;
       } else if (customTitleIcon && !selectOpen) {
@@ -90,11 +91,12 @@ export default class MultiSelector extends Component {
     function selectItem() {
       let dataValue = this.getAttribute('data-value');
       let dataTitle = this.innerHTML;
+      console.log(dataTitle);
 
       toggleSelector();
 
       setTimeout(() => {
-        // that.msTitle.textContent = dataTitle;
+        that.msTitleText.textContent = dataTitle;
         clearSelectedOptions();
         this.classList.add('ms-dropdown__item_active');
         that.el.value = dataValue;
