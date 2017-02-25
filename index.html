@@ -65,20 +65,16 @@
   <script src="dist/multiselecter.js"></script>
   <script>
     var plainSelect = new MultiSelector({
-      el: document.querySelector('.ms-select'),
-      settings: {
-        titleIconClose: 'src/img/title-icon-custom-close.svg',
-        titleIconOpen: 'src/img/title-icon-custom-open.svg',
-        dropdownNoFlow: true,
-        keepOpenByAreaClick: true
-      }
+      el: document.querySelector('.ms-select')
     });
 
     var customIconSelect = new MultiSelector({
       el: document.querySelector('.ms-select-custom-icon'),
       settings: {
         titleIconClose: 'src/img/bomb.svg',
-        titleIconOpen: 'src/img/explosion.svg'
+        titleIconOpen: 'src/img/explosion.svg',
+        dropdownNoFlow: true,
+        keepOpenByAreaClick: true
       }
     });
   </script>

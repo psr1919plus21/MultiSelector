@@ -20,6 +20,7 @@ export default class MultiSelector extends Component {
     let msTitleTextNode;
     let msDropDown;
     let msItems;
+    this.settings = this.settings || {};
 
     this.el.style.display = 'none';
 
@@ -61,7 +62,6 @@ export default class MultiSelector extends Component {
     this.msSelector.appendChild(this.msTitle);
     this.msSelector.appendChild(this.msDropDown);
 
-
     // Settings handlers.
     this._setCustomTitleIcon.call(this);
     this._setDropdownNoFlow.call(this);
@@ -72,21 +72,25 @@ export default class MultiSelector extends Component {
 
     // Events.
     this.msTitle.addEventListener('click', toggleSelector.bind(this));
+
     msItems.forEach((item) => {
       item.addEventListener('click', selectItem.bind(this));
     });
 
+
+
     function toggleSelector() {
-      let self = this;
       let customTitleIcon = that.msTitle.classList.contains('ms-title_custom-icon');
-      let selectOpen = !self.msSelector.classList.contains('ms-wrapper_active');
+      let selectOpen = !this.msSelector.classList.contains('ms-wrapper_active');
 
       if (customTitleIcon && selectOpen) {
         that.customIconBlock.style.backgroundImage = `url(${that.settings.titleIconOpen})`;
       } else if (customTitleIcon && !selectOpen) {
-        that.customIconBlock.style.backgroundImage = `url(${that.settings.titleIconClose})`;
+        setTimeout(() => {
+          that.customIconBlock.style.backgroundImage = `url(${that.settings.titleIconClose})`;
+        }, 300);
       }
-      self.msSelector.classList.toggle('ms-wrapper_active');
+      this.msSelector.classList.toggle('ms-wrapper_active');
     }
 
     function selectItem(e) {
@@ -103,7 +107,6 @@ export default class MultiSelector extends Component {
       }, 300);
 
     }
-
 
     function clearSelectedOptions() {
       msItems.forEach((option) => {
@@ -143,12 +146,12 @@ export default class MultiSelector extends Component {
     let {settings} = this;
     if (!settings.keepOpenByAreaClick) {
       let body = document.querySelector('body');
-    body.addEventListener('click', (e) => {
-      let isSelector = self._hasParentClass(e.target, 'ms-wrapper');
-      if (!isSelector) {
-        self._dropDownClose.call(self);
-      }
-    });
+      body.addEventListener('click', (e) => {
+        let isSelector = self._hasParentClass(e.target, 'ms-wrapper');
+        if (!isSelector) {
+          self._dropDownClose.call(self);
+        }
+      });
     }
   }
 
