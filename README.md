@@ -57,7 +57,8 @@ Here an example of initialisation *MultiSelector* with settings.
         titleIconClose: 'src/img/bomb.svg',
         titleIconOpen: 'src/img/explosion.svg',
         dropdownNoFlow: true,
-        keepOpenByAreaClick: true
+        keepOpenByAreaClick: true,
+        dropdownUp: true
       }
     });
 
@@ -68,6 +69,8 @@ Here an example of initialisation *MultiSelector* with settings.
  **dropdownNoFlow** - If true places dropdown over content, if false content bellow will be offset on dropdown height.
 
  **keepOpenByAreaClick** - If false dropdown will be close by clicking  on any DOM element on the page, if true dropdown will be close by clicking on itself only.
+
+ **dropdownUp** – If true dropdown will be expanded up to select title, if false it will be droped down in default style. False by default.
  
 
 License
