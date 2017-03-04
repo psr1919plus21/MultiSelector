@@ -1,3 +1,5 @@
+$optionHeight: 50px;
+
 .ms-wrapper {
   font-family: sans-serif;
   position: relative;
@@ -77,6 +79,12 @@
   z-index: 1;
 }
 
+.ms-dropdown_up {
+  position: absolute; // absolute for safary flow fix.
+  width: 100%;
+  transform: translateY(calc(-100% - 40px));
+}
+
 .ms-wrapper_active {
   .ms-dropdown {
     height: 202px;
@@ -86,6 +94,7 @@
     top: 18px;
   }
 }
+
 
 .ms-dropdown__item {
   cursor: pointer;
