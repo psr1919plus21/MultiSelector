@@ -66,6 +66,7 @@ export default class MultiSelector extends Component {
     this._setCustomTitleIcon.call(this);
     this._setDropdownNoFlow.call(this);
     this._closeDropdownByArea.call(this);
+    this._setDropdownUp.call(this);
 
     this.el.parentNode.insertBefore(this.msSelector, this.el);
 
@@ -138,6 +139,13 @@ export default class MultiSelector extends Component {
     let {settings} = this;
     if (settings.dropdownNoFlow) {
       this.msDropDown.classList.add('ms-dropdown_noflow');
+    }
+  }
+
+  _setDropdownUp() {
+    let {settings} = this;
+    if (settings.dropdownUp) {
+      this.msDropDown.classList.add('ms-dropdown_up');
     }
   }
 
