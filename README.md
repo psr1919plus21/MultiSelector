@@ -73,6 +73,29 @@ Here an example of initialisation *MultiSelector* with settings.
  **dropdownUp** – If true dropdown will be expanded up to select title, if false it will be droped down in default style. False by default.
  
 
+Selector with `multiple` attribute.
+---------
+In order to initialise you select with a multiple attribute you need to just add this attribute to you select element, *MultiSelector* will do whole work underhood.
+
+**Example:**
+
+    <select class="example-classname" multiple>
+       <option  value="" disabled selected>Select your turtle</option>
+       <option value="donatello">Donatello</option>
+       <option value="leonardo">Leonardo</option>
+       <option value="michelangelo">Michelangelo</option>
+       <option value="raphael">Raphael</option>
+     </select>
+     
+     <script>
+       new MultiSelector({
+         el: document.querySelector('.example-classname')
+      });
+     </script>
+
+After this native select will be hidden and *MultiSelector* will be inserted right before native select element.
+
+
 License
 =======
 
