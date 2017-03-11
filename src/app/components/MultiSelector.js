@@ -23,6 +23,7 @@ export default class MultiSelector extends Component {
     this.settings = this.settings || {};
 
     this.el.style.display = 'none';
+    this.multiple = this.el.getAttribute('multiple') !== null;
 
     // MultiSelector wrapper.
     this.msSelector = document.createElement('div');
@@ -65,6 +66,7 @@ export default class MultiSelector extends Component {
     // Settings handlers.
     this._setCustomTitleIcon.call(this);
     this._setDropdownNoFlow.call(this);
+    this._multipleSelectPresets.call(this);
     this._closeDropdownByArea.call(this);
     this._setDropdownUp.call(this);
 
@@ -98,15 +100,28 @@ export default class MultiSelector extends Component {
       let dataValue = e.target.getAttribute('data-value');
       let dataTitle = e.target.innerHTML;
 
-      toggleSelector.call(this);
+      if (this.multiple) {
+        e.target.classList.toggle('ms-dropdown__item_active');
+        let selectedItems = Array.from(this.msDropDown.querySelectorAll('.ms-dropdown__item_active'));
+        let newData = [];
 
-      setTimeout(() => {
-        that.msTitleText.textContent = dataTitle;
-        clearSelectedOptions();
-        e.target.classList.add('ms-dropdown__item_active');
-        that.el.value = dataValue;
-      }, 300);
+        this._clearNativeMultipleOptions();
 
+        selectedItems.forEach((item) => {
+          let selectedValue = item.getAttribute('data-value');
+          newData.push(selectedValue);
+          this._setNativeMultipleOptions(selectedValue);
+        });
+
+      } else {
+        toggleSelector.call(this);
+        setTimeout(() => {
+          that.msTitleText.textContent = dataTitle;
+          clearSelectedOptions();
+          e.target.classList.add('ms-dropdown__item_active');
+          that.el.value = dataValue;
+        }, 300);
+      }
     }
 
     function clearSelectedOptions() {
@@ -163,6 +178,12 @@ export default class MultiSelector extends Component {
     }
   }
 
+  _multipleSelectPresets() {
+    if (this.multiple) {
+      this.settings.keepOpenByAreaClick = true;
+    }
+  }
+
   _hasParentClass(el, classname) {
     let parent = el.parentNode;
     let parentHasClass = false;
@@ -176,6 +197,22 @@ export default class MultiSelector extends Component {
     }
 
     return parentHasClass;
+  }
+
+  _clearNativeMultipleOptions() {
+    for (let i = 0; i < this.el.options.length; i++) {
+      let currentNativeOption = this.el.options[i];
+      currentNativeOption.selected = false;
+    }
+  }
+
+  _setNativeMultipleOptions(_selectedValue) {
+    for (let i = 0; i < this.el.options.length; i++) {
+      let currentNativeOption = this.el.options[i];
+      if (_selectedValue === currentNativeOption.value) {
+        currentNativeOption.selected = true;
+      }
+    }
   }
 
 }

@@ -67,7 +67,7 @@
       <div class="ms-example__content">
 
         <div class="select-wrapper">
-          <select class="select-with-dropdown-up">
+          <select class="select-with-dropdown-up" multiple>
             <option  value="" disabled selected>Select your turtle</option>
             <option value="donatello">Donatello</option>
             <option value="leonardo">Leonardo</option>
@@ -83,7 +83,41 @@
 
       </div>
     </article>
+
+    <!-- Multiple -->
+    <article class="ms-example">
+      <h2 class="ms-example__title">Set dropdown to up.</h2>
+      <div class="ms-example__content">
+
+        <form  class="test-form">
+          <div class="select-wrapper">
+            <select class="select-multiple" multiple>
+              <option  value="" disabled selected>Select your turtle</option>
+              <option value="donatello">Donatello</option>
+              <option value="leonardo">Leonardo</option>
+              <option value="michelangelo">Michelangelo</option>
+              <option value="raphael">Raphael</option>
+            </select>
+          </div>
+
+          <input type="submit" class="submit-btn" value="submit">
+
+        </form>
+
+        <div class="container">
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis est eveniet possimus hic alias, error nemo molestias nam dicta itaque vero quia veniam iure officia expedita blanditiis quod assumenda dolores!</p>
+          <p>Obcaecati illum explicabo, hic sed aliquam beatae eum molestiae. Ad totam doloribus porro tenetur explicabo officia cupiditate voluptas, earum, asperiores, impedit illo. Et laudantium mollitia rerum accusantium nobis quis tenetur!</p>
+          <p>Quo saepe provident, veritatis officia, qui hic at deleniti vero magni ut voluptatem minus reiciendis sit exercitationem dicta molestias quas natus iusto obcaecati consequuntur animi iste! Molestias numquam, recusandae quidem.</p>
+        </div>
+
+      </div>
+    </article>
   </section>
+
+    <script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
 
   <script src="dist/multiselecter.js"></script>
   <script>
@@ -108,8 +142,45 @@
       }
     });
 
+    var multipleSelect = new MultiSelector({
+      el: document.querySelector('.select-multiple'),
+      settings: {
+       dropdownNoFlow: true
+      }
+    });
+
+    function getSelectValues(select) {
+      var result = [];
+      var options = select && select.options;
+      var opt;
+
+      for (var i=0, iLen=options.length; i<iLen; i++) {
+        opt = options[i];
+
+        if (opt.selected) {
+          result.push(opt.value || opt.text);
+        }
+      }
+      return result;
+    }
+
+    document.querySelector('.test-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      let data = JSON.stringify(getSelectValues(document.querySelector('.select-multiple')));
+      console.log(data);
+
+      $.ajax({
+        type: "POST",
+        url: 'http://127.0.0.1:8080/',
+        data: data
+      });
+
+    });
+
 
   </script>
+
 </body>
 </html>
 
