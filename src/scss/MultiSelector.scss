@@ -87,7 +87,7 @@ $optionHeight: 50px;
 
 .ms-wrapper_active {
   .ms-dropdown {
-    height: 202px;
+    height: 200px;
   }
   .ms-title:before {
     transform: rotate(-45deg);
@@ -108,7 +108,6 @@ $optionHeight: 50px;
 .ms-dropdown__item_active {
   background: #4495cc;
   color: #fff;
-  cursor: default;
   &:hover {
     background: #4495cc;
     color: #fff;
