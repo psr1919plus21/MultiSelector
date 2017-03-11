@@ -77,6 +77,8 @@ Selector with `multiple` attribute.
 ---------
 In order to initialise you select with a multiple attribute you need to just add this attribute to you select element, *MultiSelector* will do whole work underhood.
 
+**Adding `multiple` attribute to select element will set keepOpenByAreaClick permanently true.**
+
 **Example:**
 
     <select class="example-classname" multiple>
