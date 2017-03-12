@@ -131,6 +131,20 @@ export default class MultiSelector extends Component {
     }
   }
 
+  getValue() {
+    let result = [];
+    let options = this.el && this.el.options;
+    let opt;
+    for (var i=0, iLen=options.length; i<iLen; i++) {
+      opt = options[i];
+
+      if (opt.selected) {
+        result.push(opt.value || opt.text);
+      }
+    }
+    return result;
+  }
+
   _dropDownClose() {
     this.msSelector.classList.remove('ms-wrapper_active');
     let customTitleIcon = this.msTitle.classList.contains('ms-title_custom-icon');
