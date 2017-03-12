@@ -97,6 +97,13 @@ In order to initialise you select with a multiple attribute you need to just add
 
 After this native select will be hidden and *MultiSelector* will be inserted right before native select element.
 
+Methods
+---------
+
+*MultiSelector* instance has the following methods:
+
+`getValue` – return an array with selected items.
+
 
 License
 =======
