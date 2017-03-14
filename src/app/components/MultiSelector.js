@@ -24,6 +24,9 @@ export default class MultiSelector extends Component {
 
     this.el.style.display = 'none';
     this.multiple = this.el.getAttribute('multiple') !== null;
+    this.el.items =  this._getCleanOptions();
+    this.settings.allSelectedPlaceholder = this.settings.allSelectedPlaceholder || 'All selected';
+    this.settings.selectedSeparator = this.settings.selectedSeparator || 'of';
 
     // MultiSelector wrapper.
     this.msSelector = document.createElement('div');
@@ -102,16 +105,27 @@ export default class MultiSelector extends Component {
 
       if (this.multiple) {
         e.target.classList.toggle('ms-dropdown__item_active');
-        let selectedItems = Array.from(this.msDropDown.querySelectorAll('.ms-dropdown__item_active'));
-        let newData = [];
 
+        let selectedItems = Array.from(this.msDropDown.querySelectorAll('.ms-dropdown__item_active'));
+        let selectedItemsLength = selectedItems.length;
+        let allItemsLength = this.el.items.length;
         this._clearNativeMultipleOptions();
 
         selectedItems.forEach((item) => {
           let selectedValue = item.getAttribute('data-value');
-          newData.push(selectedValue);
           this._setNativeMultipleOptions(selectedValue);
         });
+
+
+        if (!selectedItemsLength) {
+          that.msTitleText.textContent = this.ui.msPlaceholder[0].text
+        }  else if (selectedItemsLength === 1) {
+          that.msTitleText.textContent = selectedItems[0].innerHTML;
+        } else if (selectedItemsLength < allItemsLength) {
+           that.msTitleText.textContent = `${selectedItemsLength} ${this.settings.selectedSeparator} ${allItemsLength}`;
+        } else {
+          that.msTitleText.textContent = this.settings.allSelectedPlaceholder;
+        }
 
       } else {
         toggleSelector.call(this);
@@ -227,6 +241,12 @@ export default class MultiSelector extends Component {
         currentNativeOption.selected = true;
       }
     }
+  }
+
+  _getCleanOptions() {
+    return Array.from(this.el.options).filter((item) => {
+      return !!item.value;
+    });
   }
 
 }
