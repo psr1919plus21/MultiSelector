@@ -145,11 +145,11 @@
     var multipleSelect = new MultiSelector({
       el: document.querySelector('.select-multiple'),
       settings: {
-       dropdownNoFlow: true
+       dropdownNoFlow: true,
+       allSelectedPlaceholder: 'Все черепахи',
+       selectedSeparator: 'из'
       }
     });
-
-
 
     document.querySelector('.test-form').addEventListener('submit', function(e) {
       e.preventDefault();
