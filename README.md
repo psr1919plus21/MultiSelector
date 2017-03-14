@@ -58,7 +58,9 @@ Here an example of initialisation *MultiSelector* with settings.
         titleIconOpen: 'src/img/explosion.svg',
         dropdownNoFlow: true,
         keepOpenByAreaClick: true,
-        dropdownUp: true
+        dropdownUp: true,
+        selectedSeparator: 'from',
+        allSelectedPlaceholder: 'you select all cats'
       }
     });
 
@@ -71,6 +73,10 @@ Here an example of initialisation *MultiSelector* with settings.
  **keepOpenByAreaClick** - If false dropdown will be close by clicking  on any DOM element on the page, if true dropdown will be close by clicking on itself only.
 
  **dropdownUp** – If true dropdown will be expanded up to select title, if false it will be droped down in default style. False by default.
+
+ **selectedSeparator** – String that separate count of selected and total values, by default – 'of'.
+
+ **allSelectedPlaceholder** – String that appears if all values will be selected.
  
 
 Selector with `multiple` attribute.
