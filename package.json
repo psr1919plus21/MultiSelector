@@ -32,6 +32,7 @@
     "extract-text-webpack-plugin": "^2.0.0-rc.3",
     "lodash": "^4.17.4",
     "mocha": "^3.2.0",
+    "mocha-jsdom": "^1.1.0",
     "resolve-url-loader": "^1.6.1",
     "sass-loader": "^6.0.0",
     "style-loader": "^0.13.1",
