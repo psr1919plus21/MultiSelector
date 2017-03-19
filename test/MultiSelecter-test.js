@@ -21,6 +21,14 @@ describe('MultiSelector', function() {
     expect(select.style.display).to.equal('none');
   });
 
+  it('should have four li items', function() {
+    let selectorInstance = new MultiSelector({
+      el: select
+    });
+    expect(selectorInstance.msItems[0].tagName).to.equal('LI');
+    expect(selectorInstance.msItems.length).to.equal(4);
+  })
+
 });
 
 function _createPlainSelect() {

@@ -60,7 +60,7 @@ export default class MultiSelector extends Component {
       msItem.setAttribute('data-value', optionValue);
       this.msDropDown.appendChild(msItem);
     });
-    msItems = this.msDropDown.querySelectorAll('.ms-dropdown__item');
+    this.msItems = msItems = this.msDropDown.querySelectorAll('.ms-dropdown__item');
 
     this.msTitleText.appendChild(msTitleTextNode);
     this.msSelector.appendChild(this.msTitle);
