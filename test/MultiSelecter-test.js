@@ -4,11 +4,13 @@ let jsdom = require('jsdom').jsdom;
 let MultiSelector = require('../src/app/components/MultiSelector').default;
 let plainSelect;
 let placeholderSelect;
+let multipleSelect;
 
 beforeEach(function() {
   global.document = jsdom();
   _createPlainSelect();
   _createSelectWithPlaceholder();
+  _createSelectMultiple();
 });
 
 describe('MultiSelector', function() {
@@ -69,6 +71,20 @@ describe('MultiSelector', function() {
     }, 300);
   });
 
+  it('shoud select multiple items', function(done) {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelect
+    });
+     selectorInstance.msItems[0].click();
+     selectorInstance.msItems[1].click();
+    setTimeout(() => {
+      let expected = ['leonardo', 'donatello'];
+      let actual = selectorInstance.getValue();
+      expect(expected).to.deep.equal(actual);
+      done();
+    }, 300);
+  })
+
 
 });
 
@@ -113,7 +129,31 @@ function _createSelectWithPlaceholder() {
   selectWrapper.appendChild(placeholderSelect);
 }
 
+function _createSelectMultiple() {
+  let placeholderText = 'Select your turtle';
+  let selectData = ['Leonardo', 'Donatello', 'Michelangelo', 'Raphael'];
+  let selectWrapper = document.createElement('div');
+  multipleSelect = document.createElement('select');
+  multipleSelect.setAttribute('multiple', true);
 
+
+  let option = document.createElement('option');
+  let optionText = document.createTextNode(placeholderText);
+  option.setAttribute('value', '');
+  option.appendChild(optionText);
+  multipleSelect.appendChild(option);
+
+  selectData.forEach((item) => {
+    let normalizedItem = item.trim().toLowerCase();
+    let option = document.createElement('option');
+    let optionText = document.createTextNode(item);
+    option.setAttribute('value', normalizedItem);
+    option.appendChild(optionText);
+    multipleSelect.appendChild(option);
+  })
+
+  selectWrapper.appendChild(multipleSelect);
+}
 
 
 
