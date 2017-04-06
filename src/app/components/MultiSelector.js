@@ -60,7 +60,7 @@ export default class MultiSelector extends Component {
       msItem.setAttribute('data-value', optionValue);
       this.msDropDown.appendChild(msItem);
     });
-    this.msItems = msItems = this.msDropDown.querySelectorAll('.ms-dropdown__item');
+    this.msItems = this.msDropDown.querySelectorAll('.ms-dropdown__item');
 
     this.msTitleText.appendChild(msTitleTextNode);
     this.msSelector.appendChild(this.msTitle);
@@ -75,74 +75,13 @@ export default class MultiSelector extends Component {
 
     this.el.parentNode.insertBefore(this.msSelector, this.el);
 
-
     // Events.
-    this.msTitle.addEventListener('click', toggleSelector.bind(this));
+    this.msTitle.addEventListener('click', this._toggleSelector.bind(this));
 
-    msItems.forEach((item) => {
-      item.addEventListener('click', selectItem.bind(this));
+    this.msItems.forEach((item) => {
+      item.addEventListener('click', this._selectItem.bind(this));
     });
 
-
-
-    function toggleSelector() {
-      let customTitleIcon = that.msTitle.classList.contains('ms-title_custom-icon');
-      let selectOpen = !this.msSelector.classList.contains('ms-wrapper_active');
-
-      if (customTitleIcon && selectOpen) {
-        that.customIconBlock.style.backgroundImage = `url(${that.settings.titleIconOpen})`;
-      } else if (customTitleIcon && !selectOpen) {
-        setTimeout(() => {
-          that.customIconBlock.style.backgroundImage = `url(${that.settings.titleIconClose})`;
-        }, 300);
-      }
-      this.msSelector.classList.toggle('ms-wrapper_active');
-    }
-
-    function selectItem(e) {
-      let dataValue = e.target.getAttribute('data-value');
-      let dataTitle = e.target.innerHTML;
-
-      if (this.multiple) {
-        e.target.classList.toggle('ms-dropdown__item_active');
-
-        let selectedItems = Array.from(this.msDropDown.querySelectorAll('.ms-dropdown__item_active'));
-        let selectedItemsLength = selectedItems.length;
-        let allItemsLength = this.el.items.length;
-        this._clearNativeMultipleOptions();
-
-        selectedItems.forEach((item) => {
-          let selectedValue = item.getAttribute('data-value');
-          this._setNativeMultipleOptions(selectedValue);
-        });
-
-
-        if (!selectedItemsLength) {
-          that.msTitleText.textContent = this.ui.msPlaceholder[0].text
-        }  else if (selectedItemsLength === 1) {
-          that.msTitleText.textContent = selectedItems[0].innerHTML;
-        } else if (selectedItemsLength < allItemsLength) {
-           that.msTitleText.textContent = `${selectedItemsLength} ${this.settings.selectedSeparator} ${allItemsLength}`;
-        } else {
-          that.msTitleText.textContent = this.settings.allSelectedPlaceholder;
-        }
-
-      } else {
-        toggleSelector.call(this);
-        setTimeout(() => {
-          that.msTitleText.textContent = dataTitle;
-          clearSelectedOptions();
-          e.target.classList.add('ms-dropdown__item_active');
-          that.el.value = dataValue;
-        }, 300);
-      }
-    }
-
-    function clearSelectedOptions() {
-      msItems.forEach((option) => {
-        option.classList.remove('ms-dropdown__item_active');
-      });
-    }
   }
 
   getValue() {
@@ -157,6 +96,60 @@ export default class MultiSelector extends Component {
       }
     }
     return result;
+  }
+
+  // Maybe later this func will be public for programmatically toggle particular select.
+  _toggleSelector() {
+    let customTitleIcon = this.msTitle.classList.contains('ms-title_custom-icon');
+    let selectOpen = !this.msSelector.classList.contains('ms-wrapper_active');
+
+    if (customTitleIcon && selectOpen) {
+      this.customIconBlock.style.backgroundImage = `url(${this.settings.titleIconOpen})`;
+    } else if (customTitleIcon && !selectOpen) {
+      setTimeout(() => {
+        this.customIconBlock.style.backgroundImage = `url(${this.settings.titleIconClose})`;
+      }, 300);
+    }
+    this.msSelector.classList.toggle('ms-wrapper_active');
+  }
+
+  // Maybe later this func will be public for programmatically selection particular items.
+  _selectItem(e) {
+    let dataValue = e.target.getAttribute('data-value');
+    let dataTitle = e.target.innerHTML;
+
+    if (this.multiple) {
+      e.target.classList.toggle('ms-dropdown__item_active');
+
+      let selectedItems = Array.from(this.msDropDown.querySelectorAll('.ms-dropdown__item_active'));
+      let selectedItemsLength = selectedItems.length;
+      let allItemsLength = this.el.items.length;
+      this._clearNativeMultipleOptions();
+
+      selectedItems.forEach((item) => {
+        let selectedValue = item.getAttribute('data-value');
+        this._setNativeMultipleOptions(selectedValue);
+      });
+
+      if (!selectedItemsLength) {
+        this.msTitleText.textContent = this.ui.msPlaceholder[0].text
+      }  else if (selectedItemsLength === 1) {
+        this.msTitleText.textContent = selectedItems[0].innerHTML;
+      } else if (selectedItemsLength < allItemsLength) {
+         this.msTitleText.textContent = `${selectedItemsLength} ${this.settings.selectedSeparator} ${allItemsLength}`;
+      } else {
+        this.msTitleText.textContent = this.settings.allSelectedPlaceholder;
+      }
+
+    } else {
+      this._toggleSelector.call(this);
+      setTimeout(() => {
+        this.msTitleText.textContent = dataTitle;
+        this._clearSelectedOptions();
+        e.target.classList.add('ms-dropdown__item_active');
+        this.el.value = dataValue;
+      }, 300);
+    }
   }
 
   _dropDownClose() {
@@ -246,6 +239,12 @@ export default class MultiSelector extends Component {
   _getCleanOptions() {
     return Array.from(this.el.options).filter((item) => {
       return !!item.value;
+    });
+  }
+
+  _clearSelectedOptions() {
+    this.msItems.forEach((option) => {
+      option.classList.remove('ms-dropdown__item_active');
     });
   }
 
