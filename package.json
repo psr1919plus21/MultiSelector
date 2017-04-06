@@ -4,7 +4,7 @@
   "description": "Dependecies free javascript plugin for customization selects input elements.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --compilers js:babel-core/register --recursive",
+    "test": "mocha --require ignore-styles --compilers js:babel-core/register --recursive",
     "test:watch": "npm run test -- --watch"
   },
   "repository": {
@@ -30,6 +30,7 @@
     "chai": "^3.5.0",
     "css-loader": "^0.26.1",
     "extract-text-webpack-plugin": "^2.0.0-rc.3",
+    "ignore-styles": "^5.0.1",
     "lodash": "^4.17.4",
     "mocha": "^3.2.0",
     "mocha-jsdom": "^1.1.0",
