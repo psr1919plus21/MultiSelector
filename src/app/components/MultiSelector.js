@@ -13,19 +13,19 @@ export default class MultiSelector extends Component {
   }
 
   afterInitialize() {
-    let that = this;
-    let msTitle;
-    let msPlaceholder;
-    let msTitleTextNode;
-    let msDropDown;
-    let msItems;
-    this.settings = this.settings || {};
+    let settingsDefault = {
+      allSelectedPlaceholder: 'All selected',
+      selectedSeparator: 'of',
+      dropdownNoFlow: false,
+      keepOpenByAreaClick: false,
+      dropdownUp: false
+    }
+
+    this.settings = Object.assign(settingsDefault, this.settings);
 
     this.el.style.display = 'none';
     this.multiple = this.el.getAttribute('multiple') !== null;
     this.el.items =  this._getCleanOptions();
-    this.settings.allSelectedPlaceholder = this.settings.allSelectedPlaceholder || 'All selected';
-    this.settings.selectedSeparator = this.settings.selectedSeparator || 'of';
 
     // MultiSelector wrapper.
     this.msSelector = document.createElement('div');
@@ -41,9 +41,9 @@ export default class MultiSelector extends Component {
 
     // MultiSelector placeholder.
     if (this.ui.msPlaceholder.length) {
-      msTitleTextNode = document.createTextNode(this.ui.msPlaceholder[0].text);
+      this.msTitleTextNode = document.createTextNode(this.ui.msPlaceholder[0].text);
     } else if (this.ui.msOption.length) {
-      msTitleTextNode = document.createTextNode(this.ui.msOption[0].text);
+      this.msTitleTextNode = document.createTextNode(this.ui.msOption[0].text);
     }
 
     // Multiselector dropdown.
@@ -61,16 +61,16 @@ export default class MultiSelector extends Component {
     });
     this.msItems = this.msDropDown.querySelectorAll('.ms-dropdown__item');
 
-    this.msTitleText.appendChild(msTitleTextNode);
+    this.msTitleText.appendChild(this.msTitleTextNode);
     this.msSelector.appendChild(this.msTitle);
     this.msSelector.appendChild(this.msDropDown);
 
     // Settings handlers.
     this._setCustomTitleIcon.call(this);
-    this._setDropdownNoFlow.call(this);
     this._multipleSelectPresets.call(this);
     this._closeDropdownByArea.call(this);
     this._setDropdownUp.call(this);
+    this._setDropdownNoFlow.call(this);
 
     this.el.parentNode.insertBefore(this.msSelector, this.el);
 
@@ -181,6 +181,7 @@ export default class MultiSelector extends Component {
     let {settings} = this;
     if (settings.dropdownUp) {
       this.msDropDown.classList.add('ms-dropdown_up');
+      this.settings.dropdownNoFlow = true;
     }
   }
 

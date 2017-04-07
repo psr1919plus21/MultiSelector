@@ -80,8 +80,6 @@ $optionHeight: 50px;
 }
 
 .ms-dropdown_up {
-  position: absolute; // absolute for safary flow fix.
-  width: 100%;
   transform: translateY(calc(-100% - 40px));
 }
 
