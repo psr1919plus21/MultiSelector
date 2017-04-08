@@ -65,12 +65,8 @@ export default class MultiSelector extends Component {
     this.msSelector.appendChild(this.msTitle);
     this.msSelector.appendChild(this.msDropDown);
 
-    // Settings handlers.
-    this._setCustomTitleIcon.call(this);
-    this._multipleSelectPresets.call(this);
-    this._closeDropdownByArea.call(this);
-    this._setDropdownUp.call(this);
-    this._setDropdownNoFlow.call(this);
+    // Apply settings.
+    this._applySettings();
 
     this.el.parentNode.insertBefore(this.msSelector, this.el);
 
@@ -246,6 +242,14 @@ export default class MultiSelector extends Component {
     this.msItems.forEach((option) => {
       option.classList.remove('ms-dropdown__item_active');
     });
+  }
+
+  _applySettings() {
+    this._setCustomTitleIcon.call(this);
+    this._multipleSelectPresets.call(this);
+    this._closeDropdownByArea.call(this);
+    this._setDropdownUp.call(this);
+    this._setDropdownNoFlow.call(this);
   }
 
 }
