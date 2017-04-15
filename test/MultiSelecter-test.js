@@ -85,6 +85,16 @@ describe('MultiSelector', function() {
     }, 300);
   })
 
+  it('shoud return empty array on first load', function() {
+    let selectorInstance = new MultiSelector({
+      el: placeholderSelect
+    });
+    let expected = [];
+    let actual = selectorInstance.getValue();
+    expect(expected).to.deep.equal(actual);
+
+  });
+
 
 });
 
