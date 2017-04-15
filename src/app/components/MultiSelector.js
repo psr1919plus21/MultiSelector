@@ -86,11 +86,15 @@ export default class MultiSelector extends Component {
     for (var i=0, iLen=options.length; i<iLen; i++) {
       opt = options[i];
 
-      if (opt.selected) {
-        result.push(opt.value || opt.text);
+      if (opt.selected && opt.value) {
+        result.push(opt.value);
       }
     }
     return result;
+  }
+
+  getValueAsString() {
+    return JSON.stringify(this.getValue());
   }
 
   // Maybe later this func will be public for programmatically toggle particular select.

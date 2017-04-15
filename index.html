@@ -155,13 +155,15 @@
     document.querySelector('.test-form').addEventListener('submit', function(e) {
       e.preventDefault();
 
-      let data = multipleSelect.getValue();
-      console.log(data);
+      let dataRaw = multipleSelect.getValue();
+      let dataStringify = multipleSelect.getValueAsString();
+      console.log(dataRaw);
+      console.log(dataStringify);
 
       $.ajax({
         type: "POST",
         url: 'http://127.0.0.1:8080/',
-        data: data
+        data: dataStringify
       });
 
     });
