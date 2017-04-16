@@ -95,6 +95,33 @@ describe('MultiSelector', function() {
 
   });
 
+  it('shoud have select all button', function() {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelect,
+      settings: {
+        selectAll: true
+      }
+    });
+    let selectAllBtn = selectorInstance.msSelectAll;
+    let expected = 'LI';
+    let actual = selectAllBtn.tagName;
+    expect(expected).to.equal(actual);
+  })
+
+  it('shoud select all items by button', function() {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelect,
+      settings: {
+        selectAll: true
+      }
+    });
+    let selectAllBtn = selectorInstance.msSelectAll;
+    selectAllBtn.click();
+    let expected = ['leonardo', 'donatello', 'michelangelo', 'raphael'];
+    let actual = selectorInstance.getValue();
+    expect(expected).to.deep.equal(actual);
+  })
+
 
 });
 

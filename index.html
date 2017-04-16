@@ -113,6 +113,33 @@
 
       </div>
     </article>
+
+    <!-- Custom actions -->
+    <article class="ms-example">
+      <h2 class="ms-example__title">Set dropdown custom actions.</h2>
+      <div class="ms-example__content">
+
+        <form  class="test-form">
+          <div class="select-wrapper">
+            <select class="select-custom-actions" multiple>
+              <option  value="" disabled selected>Select your turtle</option>
+              <option value="donatello">Donatello</option>
+              <option value="leonardo">Leonardo</option>
+              <option value="michelangelo">Michelangelo</option>
+              <option value="raphael">Raphael</option>
+            </select>
+          </div>
+
+        </form>
+
+        <div class="container">
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis est eveniet possimus hic alias, error nemo molestias nam dicta itaque vero quia veniam iure officia expedita blanditiis quod assumenda dolores!</p>
+          <p>Obcaecati illum explicabo, hic sed aliquam beatae eum molestiae. Ad totam doloribus porro tenetur explicabo officia cupiditate voluptas, earum, asperiores, impedit illo. Et laudantium mollitia rerum accusantium nobis quis tenetur!</p>
+          <p>Quo saepe provident, veritatis officia, qui hic at deleniti vero magni ut voluptatem minus reiciendis sit exercitationem dicta molestias quas natus iusto obcaecati consequuntur animi iste! Molestias numquam, recusandae quidem.</p>
+        </div>
+
+      </div>
+    </article>
   </section>
 
     <script
@@ -149,6 +176,14 @@
        dropdownNoFlow: true,
        allSelectedPlaceholder: 'Все черепахи',
        selectedSeparator: 'из'
+      }
+    });
+
+    var customActionsSelect = new MultiSelector({
+      el: document.querySelector('.select-custom-actions'),
+      settings: {
+        selectAll: true,
+        selectAllText: 'Выбрать все'
       }
     });
 
