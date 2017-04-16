@@ -122,6 +122,58 @@ describe('MultiSelector', function() {
     expect(expected).to.deep.equal(actual);
   })
 
+  it('shoud add disabled class to select all button.', function() {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelect,
+      settings: {
+        selectAll: true
+      }
+    });
+    let selectAllBtn = selectorInstance.msSelectAll;
+    selectAllBtn.click();
+    let expected = true;
+    let actual = selectAllBtn.classList.contains('ms-dropdown__select-all_active');
+    expect(expected).to.equal(actual);
+  })
+
+  it('shoud remove disabled class from select all button after deselect one of items.', function() {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelect,
+      settings: {
+        selectAll: true
+      }
+    });
+    let selectAllBtn = selectorInstance.msSelectAll;
+    let firstOption = selectorInstance.msItems[0];
+    selectAllBtn.click();
+    firstOption.click();
+    let expected = false;
+    let actual = selectAllBtn.classList.contains('ms-dropdown__select-all_active');
+    expect(expected).to.equal(actual);
+  })
+
+  it('shoud set disabled class on select all button after select all items.', function(done) {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelect,
+      settings: {
+        selectAll: true
+      }
+    });
+    let selectAllBtn = selectorInstance.msSelectAll;
+    let firstOption = selectorInstance.msItems[0];
+    selectAllBtn.click();
+    firstOption.click();
+    setTimeout(function() {
+      firstOption.click();
+      setTimeout(function() {
+        let expected = true;
+        let actual = selectAllBtn.classList.contains('ms-dropdown__select-all_active');
+        expect(expected).to.equal(actual);
+        done();
+      }, 300);
+    }, 600);
+  })
+
 
 });
 

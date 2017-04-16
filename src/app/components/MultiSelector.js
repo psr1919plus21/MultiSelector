@@ -111,6 +111,12 @@ export default class MultiSelector extends Component {
     return result;
   }
 
+  isAllSelected() {
+    let selectedItemsLength = Array.from(this.msDropDown.querySelectorAll('.ms-dropdown__item_active')).length;
+    let allItemsLength = this.el.items.length;
+    return selectedItemsLength === allItemsLength;
+  }
+
   getValueAsString() {
     return JSON.stringify(this.getValue());
   }
@@ -156,6 +162,12 @@ export default class MultiSelector extends Component {
          this.msTitleText.textContent = `${selectedItemsLength} ${this.settings.selectedSeparator} ${allItemsLength}`;
       } else {
         this.msTitleText.textContent = this.settings.allSelectedPlaceholder;
+      }
+
+      if (this.isAllSelected()) {
+        this.msSelectAll.classList.add('ms-dropdown__select-all_active');
+      } else {
+        this.msSelectAll.classList.remove('ms-dropdown__select-all_active');
       }
 
     } else {
