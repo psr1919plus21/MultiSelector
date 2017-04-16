@@ -1,6 +1,5 @@
 import Component from './Component';
 
-require('../../scss/main.scss');
 require('../../scss/MultiSelector.scss');
 
 export default class MultiSelector extends Component {
@@ -14,15 +13,21 @@ export default class MultiSelector extends Component {
   }
 
   afterInitialize() {
-    let that = this;
-    let msTitle;
-    let msPlaceholder;
-    let msTitleTextNode;
-    let msDropDown;
-    let msItems;
-    this.settings = this.settings || {};
+    let settingsDefault = {
+      allSelectedPlaceholder: 'All selected',
+      selectedSeparator: 'of',
+      dropdownNoFlow: false,
+      keepOpenByAreaClick: false,
+      dropdownUp: false,
+      selectAll: false,
+      selectAllText: 'Select all'
+    }
+
+    this.settings = Object.assign(settingsDefault, this.settings);
 
     this.el.style.display = 'none';
+    this.multiple = this.el.getAttribute('multiple') !== null;
+    this.el.items =  this._getCleanOptions();
 
     // MultiSelector wrapper.
     this.msSelector = document.createElement('div');
@@ -38,14 +43,29 @@ export default class MultiSelector extends Component {
 
     // MultiSelector placeholder.
     if (this.ui.msPlaceholder.length) {
-      msTitleTextNode = document.createTextNode(this.ui.msPlaceholder[0].text);
+      this.msTitleTextNode = document.createTextNode(this.ui.msPlaceholder[0].text);
     } else if (this.ui.msOption.length) {
-      msTitleTextNode = document.createTextNode(this.ui.msOption[0].text);
+      this.msTitleTextNode = document.createTextNode(this.ui.msOption[0].text);
     }
 
     // Multiselector dropdown.
     this.msDropDown = document.createElement('ul');
     this.msDropDown.classList.add('ms-dropdown');
+
+    // Add select all button
+    if (this.multiple && this.settings.selectAll) {
+      this.msSelectAll = document.createElement('li');
+      this.msSelectAll.classList.add('ms-dropdown__select-all');
+      let selectAllTextNode = document.createTextNode(this.settings.selectAllText);
+      this.msSelectAll.appendChild(selectAllTextNode);
+      this.msDropDown.appendChild(this.msSelectAll);
+
+      this.msSelectAll.addEventListener('click', this._selectAll.bind(this));
+    } else if (this.settings.selectAll) {
+      console.warn('Select all button can be attached to multiple select only.');
+      console.warn(this.el);
+      console.log('Read multiple attribute documentation for details: https://www.w3schools.com/tags/att_select_multiple.asp');
+    }
 
     this.ui.msOption.forEach((option) => {
       let msItem = document.createElement('li');
@@ -56,63 +76,125 @@ export default class MultiSelector extends Component {
       msItem.setAttribute('data-value', optionValue);
       this.msDropDown.appendChild(msItem);
     });
-    msItems = this.msDropDown.querySelectorAll('.ms-dropdown__item');
+    this.msItems = this.msDropDown.querySelectorAll('.ms-dropdown__item');
 
-    this.msTitleText.appendChild(msTitleTextNode);
+
+    this.msTitleText.appendChild(this.msTitleTextNode);
     this.msSelector.appendChild(this.msTitle);
     this.msSelector.appendChild(this.msDropDown);
 
-    // Settings handlers.
-    this._setCustomTitleIcon.call(this);
-    this._setDropdownNoFlow.call(this);
-    this._closeDropdownByArea.call(this);
+    // Apply settings.
+    this._applySettings();
 
     this.el.parentNode.insertBefore(this.msSelector, this.el);
 
-
     // Events.
-    this.msTitle.addEventListener('click', toggleSelector.bind(this));
+    this.msTitle.addEventListener('click', this._toggleSelector.bind(this));
 
-    msItems.forEach((item) => {
-      item.addEventListener('click', selectItem.bind(this));
+    this.msItems.forEach((item) => {
+      item.addEventListener('click', this._selectItem.bind(this));
     });
 
+  }
 
+  getValue() {
+    let result = [];
+    let options = this.el && this.el.options;
+    let opt;
+    for (var i=0, iLen=options.length; i<iLen; i++) {
+      opt = options[i];
 
-    function toggleSelector() {
-      let customTitleIcon = that.msTitle.classList.contains('ms-title_custom-icon');
-      let selectOpen = !this.msSelector.classList.contains('ms-wrapper_active');
-
-      if (customTitleIcon && selectOpen) {
-        that.customIconBlock.style.backgroundImage = `url(${that.settings.titleIconOpen})`;
-      } else if (customTitleIcon && !selectOpen) {
-        setTimeout(() => {
-          that.customIconBlock.style.backgroundImage = `url(${that.settings.titleIconClose})`;
-        }, 300);
+      if (opt.selected && opt.value) {
+        result.push(opt.value);
       }
-      this.msSelector.classList.toggle('ms-wrapper_active');
     }
+    return result;
+  }
 
-    function selectItem(e) {
-      let dataValue = e.target.getAttribute('data-value');
-      let dataTitle = e.target.innerHTML;
+  isAllSelected() {
+    let selectedItemsLength = Array.from(this.msDropDown.querySelectorAll('.ms-dropdown__item_active')).length;
+    let allItemsLength = this.el.items.length;
+    return selectedItemsLength === allItemsLength;
+  }
 
-      toggleSelector.call(this);
+  getValueAsString() {
+    return JSON.stringify(this.getValue());
+  }
 
+  // Maybe later this func will be public for programmatically toggle particular select.
+  _toggleSelector() {
+    let customTitleIcon = this.msTitle.classList.contains('ms-title_custom-icon');
+    let selectOpen = !this.msSelector.classList.contains('ms-wrapper_active');
+
+    if (customTitleIcon && selectOpen) {
+      this.customIconBlock.style.backgroundImage = `url(${this.settings.titleIconOpen})`;
+    } else if (customTitleIcon && !selectOpen) {
       setTimeout(() => {
-        that.msTitleText.textContent = dataTitle;
-        clearSelectedOptions();
-        e.target.classList.add('ms-dropdown__item_active');
-        that.el.value = dataValue;
+        this.customIconBlock.style.backgroundImage = `url(${this.settings.titleIconClose})`;
       }, 300);
-
     }
+    this.msSelector.classList.toggle('ms-wrapper_active');
+  }
 
-    function clearSelectedOptions() {
-      msItems.forEach((option) => {
-        option.classList.remove('ms-dropdown__item_active');
+  // Maybe later this func will be public for programmatically selection particular items.
+  _selectItem(e) {
+    let dataValue = e.target.getAttribute('data-value');
+    let dataTitle = e.target.innerHTML;
+
+    if (this.multiple) {
+      e.target.classList.toggle('ms-dropdown__item_active');
+
+      let selectedItems = Array.from(this.msDropDown.querySelectorAll('.ms-dropdown__item_active'));
+      let selectedItemsLength = selectedItems.length;
+      let allItemsLength = this.el.items.length;
+      this._clearNativeMultipleOptions();
+
+      selectedItems.forEach((item) => {
+        let selectedValue = item.getAttribute('data-value');
+        this._setNativeMultipleOptions(selectedValue);
       });
+
+      if (!selectedItemsLength) {
+        this.msTitleText.textContent = this.ui.msPlaceholder[0].text
+      }  else if (selectedItemsLength === 1) {
+        this.msTitleText.textContent = selectedItems[0].innerHTML;
+      } else if (selectedItemsLength < allItemsLength) {
+         this.msTitleText.textContent = `${selectedItemsLength} ${this.settings.selectedSeparator} ${allItemsLength}`;
+      } else {
+        this.msTitleText.textContent = this.settings.allSelectedPlaceholder;
+      }
+
+      if (this.isAllSelected()) {
+        this.msSelectAll.classList.add('ms-dropdown__select-all_active');
+      } else {
+        this.msSelectAll.classList.remove('ms-dropdown__select-all_active');
+      }
+
+    } else {
+      this._toggleSelector.call(this);
+      setTimeout(() => {
+        this.msTitleText.textContent = dataTitle;
+        this._clearSelectedOptions();
+        e.target.classList.add('ms-dropdown__item_active');
+        this.el.value = dataValue;
+      }, 300);
     }
+  }
+
+  // Maybe later this func will be public for programmatically select all.
+  _selectAll() {
+    if (this.msSelectAll.classList.contains('ms-dropdown__select-all_active')) {
+      return;
+    }
+
+    this.msSelectAll.classList.add('ms-dropdown__select-all_active');
+    this._clearNativeMultipleOptions();
+    this.msItems.forEach((item) => {
+      item.classList.add('ms-dropdown__item_active');
+      let selectedValue = item.getAttribute('data-value');
+      this._setNativeMultipleOptions(selectedValue);
+    });
+    this.msTitleText.textContent = this.settings.allSelectedPlaceholder;
   }
 
   _dropDownClose() {
@@ -141,6 +223,14 @@ export default class MultiSelector extends Component {
     }
   }
 
+  _setDropdownUp() {
+    let {settings} = this;
+    if (settings.dropdownUp) {
+      this.msDropDown.classList.add('ms-dropdown_up');
+      this.settings.dropdownNoFlow = true;
+    }
+  }
+
   _closeDropdownByArea() {
     let self = this;
     let {settings} = this;
@@ -152,6 +242,12 @@ export default class MultiSelector extends Component {
           self._dropDownClose.call(self);
         }
       });
+    }
+  }
+
+  _multipleSelectPresets() {
+    if (this.multiple) {
+      this.settings.keepOpenByAreaClick = true;
     }
   }
 
@@ -168,6 +264,42 @@ export default class MultiSelector extends Component {
     }
 
     return parentHasClass;
+  }
+
+  _clearNativeMultipleOptions() {
+    for (let i = 0; i < this.el.options.length; i++) {
+      let currentNativeOption = this.el.options[i];
+      currentNativeOption.selected = false;
+    }
+  }
+
+  _setNativeMultipleOptions(_selectedValue) {
+    for (let i = 0; i < this.el.options.length; i++) {
+      let currentNativeOption = this.el.options[i];
+      if (_selectedValue === currentNativeOption.value) {
+        currentNativeOption.selected = true;
+      }
+    }
+  }
+
+  _getCleanOptions() {
+    return Array.from(this.el.options).filter((item) => {
+      return !!item.value;
+    });
+  }
+
+  _clearSelectedOptions() {
+    this.msItems.forEach((option) => {
+      option.classList.remove('ms-dropdown__item_active');
+    });
+  }
+
+  _applySettings() {
+    this._setCustomTitleIcon.call(this);
+    this._multipleSelectPresets.call(this);
+    this._closeDropdownByArea.call(this);
+    this._setDropdownUp.call(this);
+    this._setDropdownNoFlow.call(this);
   }
 
 }

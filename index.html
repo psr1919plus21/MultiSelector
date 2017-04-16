@@ -5,6 +5,7 @@
   <title>Multiselecter</title>
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="index.css">
 </head>
 <body>
   <div class="header">
@@ -60,7 +61,91 @@
 
       </div>
     </article>
+
+    <!-- Dropdown up -->
+    <article class="ms-example">
+      <h2 class="ms-example__title">Set dropdown to up.</h2>
+      <div class="ms-example__content">
+
+        <div class="select-wrapper">
+          <select class="select-with-dropdown-up" multiple>
+            <option  value="" disabled selected>Select your turtle</option>
+            <option value="donatello">Donatello</option>
+            <option value="leonardo">Leonardo</option>
+            <option value="michelangelo">Michelangelo</option>
+            <option value="raphael">Raphael</option>
+          </select>
+        </div>
+        <div class="container">
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis est eveniet possimus hic alias, error nemo molestias nam dicta itaque vero quia veniam iure officia expedita blanditiis quod assumenda dolores!</p>
+          <p>Obcaecati illum explicabo, hic sed aliquam beatae eum molestiae. Ad totam doloribus porro tenetur explicabo officia cupiditate voluptas, earum, asperiores, impedit illo. Et laudantium mollitia rerum accusantium nobis quis tenetur!</p>
+          <p>Quo saepe provident, veritatis officia, qui hic at deleniti vero magni ut voluptatem minus reiciendis sit exercitationem dicta molestias quas natus iusto obcaecati consequuntur animi iste! Molestias numquam, recusandae quidem.</p>
+        </div>
+
+      </div>
+    </article>
+
+    <!-- Multiple -->
+    <article class="ms-example">
+      <h2 class="ms-example__title">Set dropdown to up.</h2>
+      <div class="ms-example__content">
+
+        <form  class="test-form">
+          <div class="select-wrapper">
+            <select class="select-multiple" multiple>
+              <option  value="" disabled selected>Select your turtle</option>
+              <option value="donatello">Donatello</option>
+              <option value="leonardo">Leonardo</option>
+              <option value="michelangelo">Michelangelo</option>
+              <option value="raphael">Raphael</option>
+            </select>
+          </div>
+
+          <input type="submit" class="submit-btn" value="submit">
+
+        </form>
+
+        <div class="container">
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis est eveniet possimus hic alias, error nemo molestias nam dicta itaque vero quia veniam iure officia expedita blanditiis quod assumenda dolores!</p>
+          <p>Obcaecati illum explicabo, hic sed aliquam beatae eum molestiae. Ad totam doloribus porro tenetur explicabo officia cupiditate voluptas, earum, asperiores, impedit illo. Et laudantium mollitia rerum accusantium nobis quis tenetur!</p>
+          <p>Quo saepe provident, veritatis officia, qui hic at deleniti vero magni ut voluptatem minus reiciendis sit exercitationem dicta molestias quas natus iusto obcaecati consequuntur animi iste! Molestias numquam, recusandae quidem.</p>
+        </div>
+
+      </div>
+    </article>
+
+    <!-- Custom actions -->
+    <article class="ms-example">
+      <h2 class="ms-example__title">Set dropdown custom actions.</h2>
+      <div class="ms-example__content">
+
+        <form  class="test-form">
+          <div class="select-wrapper">
+            <select class="select-custom-actions" multiple>
+              <option  value="" disabled selected>Select your turtle</option>
+              <option value="donatello">Donatello</option>
+              <option value="leonardo">Leonardo</option>
+              <option value="michelangelo">Michelangelo</option>
+              <option value="raphael">Raphael</option>
+            </select>
+          </div>
+
+        </form>
+
+        <div class="container">
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis est eveniet possimus hic alias, error nemo molestias nam dicta itaque vero quia veniam iure officia expedita blanditiis quod assumenda dolores!</p>
+          <p>Obcaecati illum explicabo, hic sed aliquam beatae eum molestiae. Ad totam doloribus porro tenetur explicabo officia cupiditate voluptas, earum, asperiores, impedit illo. Et laudantium mollitia rerum accusantium nobis quis tenetur!</p>
+          <p>Quo saepe provident, veritatis officia, qui hic at deleniti vero magni ut voluptatem minus reiciendis sit exercitationem dicta molestias quas natus iusto obcaecati consequuntur animi iste! Molestias numquam, recusandae quidem.</p>
+        </div>
+
+      </div>
+    </article>
   </section>
+
+    <script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
 
   <script src="dist/multiselecter.js"></script>
   <script>
@@ -77,6 +162,74 @@
         keepOpenByAreaClick: true
       }
     });
+
+    var dropdownUpSelector = new MultiSelector({
+      el: document.querySelector('.select-with-dropdown-up'),
+      settings: {
+       dropdownUp: true
+      }
+    });
+
+    var multipleSelect = new MultiSelector({
+      el: document.querySelector('.select-multiple'),
+      settings: {
+       dropdownNoFlow: true,
+       allSelectedPlaceholder: 'Все черепахи',
+       selectedSeparator: 'из'
+      }
+    });
+
+    var customActionsSelect = new MultiSelector({
+      el: document.querySelector('.select-custom-actions'),
+      settings: {
+        selectAll: true,
+        selectAllText: 'Выбрать все'
+      }
+    });
+
+    document.querySelector('.test-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      let dataRaw = multipleSelect.getValue();
+      let dataStringify = multipleSelect.getValueAsString();
+      console.log(dataRaw);
+      console.log(dataStringify);
+
+      $.ajax({
+        type: "POST",
+        url: 'http://127.0.0.1:8080/',
+        data: dataStringify
+      });
+
+    });
+
+
   </script>
+
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
