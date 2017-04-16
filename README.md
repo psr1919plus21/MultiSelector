@@ -117,6 +117,8 @@ Methods
 
 `getValue` – return an array with selected items.
 
+`isAllSelected` – return true if all items selected.
+
 
 License
 =======
