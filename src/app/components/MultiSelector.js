@@ -18,7 +18,9 @@ export default class MultiSelector extends Component {
       selectedSeparator: 'of',
       dropdownNoFlow: false,
       keepOpenByAreaClick: false,
-      dropdownUp: false
+      dropdownUp: false,
+      selectAll: false,
+      selectAllText: 'Select all'
     }
 
     this.settings = Object.assign(settingsDefault, this.settings);
@@ -50,6 +52,21 @@ export default class MultiSelector extends Component {
     this.msDropDown = document.createElement('ul');
     this.msDropDown.classList.add('ms-dropdown');
 
+    // Add select all button
+    if (this.multiple && this.settings.selectAll) {
+      this.msSelectAll = document.createElement('li');
+      this.msSelectAll.classList.add('ms-dropdown__select-all');
+      let selectAllTextNode = document.createTextNode(this.settings.selectAllText);
+      this.msSelectAll.appendChild(selectAllTextNode);
+      this.msDropDown.appendChild(this.msSelectAll);
+
+      this.msSelectAll.addEventListener('click', this._selectAll.bind(this));
+    } else if (this.settings.selectAll) {
+      console.warn('Select all button can be attached to multiple select only.');
+      console.warn(this.el);
+      console.log('Read multiple attribute documentation for details: https://www.w3schools.com/tags/att_select_multiple.asp');
+    }
+
     this.ui.msOption.forEach((option) => {
       let msItem = document.createElement('li');
       msItem.classList.add('ms-dropdown__item');
@@ -60,6 +77,7 @@ export default class MultiSelector extends Component {
       this.msDropDown.appendChild(msItem);
     });
     this.msItems = this.msDropDown.querySelectorAll('.ms-dropdown__item');
+
 
     this.msTitleText.appendChild(this.msTitleTextNode);
     this.msSelector.appendChild(this.msTitle);
@@ -91,6 +109,12 @@ export default class MultiSelector extends Component {
       }
     }
     return result;
+  }
+
+  isAllSelected() {
+    let selectedItemsLength = Array.from(this.msDropDown.querySelectorAll('.ms-dropdown__item_active')).length;
+    let allItemsLength = this.el.items.length;
+    return selectedItemsLength === allItemsLength;
   }
 
   getValueAsString() {
@@ -140,6 +164,12 @@ export default class MultiSelector extends Component {
         this.msTitleText.textContent = this.settings.allSelectedPlaceholder;
       }
 
+      if (this.isAllSelected()) {
+        this.msSelectAll.classList.add('ms-dropdown__select-all_active');
+      } else {
+        this.msSelectAll.classList.remove('ms-dropdown__select-all_active');
+      }
+
     } else {
       this._toggleSelector.call(this);
       setTimeout(() => {
@@ -149,6 +179,22 @@ export default class MultiSelector extends Component {
         this.el.value = dataValue;
       }, 300);
     }
+  }
+
+  // Maybe later this func will be public for programmatically select all.
+  _selectAll() {
+    if (this.msSelectAll.classList.contains('ms-dropdown__select-all_active')) {
+      return;
+    }
+
+    this.msSelectAll.classList.add('ms-dropdown__select-all_active');
+    this._clearNativeMultipleOptions();
+    this.msItems.forEach((item) => {
+      item.classList.add('ms-dropdown__item_active');
+      let selectedValue = item.getAttribute('data-value');
+      this._setNativeMultipleOptions(selectedValue);
+    });
+    this.msTitleText.textContent = this.settings.allSelectedPlaceholder;
   }
 
   _dropDownClose() {
