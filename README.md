@@ -60,7 +60,9 @@ Here an example of initialisation *MultiSelector* with settings.
         keepOpenByAreaClick: true,
         dropdownUp: true,
         selectedSeparator: 'from',
-        allSelectedPlaceholder: 'you select all cats'
+        allSelectedPlaceholder: 'you select all cats',
+        selectAll: false,
+        selectAllText: 'Select all'
       }
     });
 
@@ -77,7 +79,12 @@ Here an example of initialisation *MultiSelector* with settings.
  **selectedSeparator** – String that separate count of selected and total values, by default – 'of'.
 
  **allSelectedPlaceholder** – String that appears if all values will be selected.
+
+ **selectAll** – This option include select all button before all your select items.
  
+ **selectAllText** – This string define select all button text.
+
+
 
 Selector with `multiple` attribute.
 ---------
