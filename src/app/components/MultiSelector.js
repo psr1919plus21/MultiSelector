@@ -20,7 +20,8 @@ export default class MultiSelector extends Component {
       keepOpenByAreaClick: false,
       dropdownUp: false,
       selectAll: false,
-      selectAllText: 'Select all'
+      selectAllText: 'Select all',
+      selectAllToggle: false
     }
 
     this.settings = Object.assign(settingsDefault, this.settings);
@@ -184,6 +185,15 @@ export default class MultiSelector extends Component {
   // Maybe later this func will be public for programmatically select all.
   _selectAll() {
     if (this.msSelectAll.classList.contains('ms-dropdown__select-all_active')) {
+
+      if (this.settings.selectAllToggle) {
+        this.msSelectAll.classList.remove('ms-dropdown__select-all_active');
+        this._clearNativeMultipleOptions();
+        this.msItems.forEach((item) => {
+          item.classList.remove('ms-dropdown__item_active');
+        });
+        this.msTitleText.textContent = this.ui.msPlaceholder[0] ? this.ui.msPlaceholder[0].text : this.msItems[0].textContent;
+      }
       return;
     }
 
