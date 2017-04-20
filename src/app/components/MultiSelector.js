@@ -168,9 +168,14 @@ export default class MultiSelector extends Component {
       }
 
       if (this.settings.selectAll) {
-        this.msSelectAll.classList.toggle('ms-dropdown__select-all_active', this.isAllSelected());
+        if (this.isAllSelected()) {
+          this.msSelectAll.classList.add('ms-dropdown__select-all_active');
+          this.msSelectAll.textContent = this.settings.unselectAllText;
+        } else {
+          this.msSelectAll.classList.remove('ms-dropdown__select-all_active');
+          this.msSelectAll.textContent = this.settings.selectAllText;
+        }
       }
-
 
     } else {
       this._toggleSelector.call(this);
