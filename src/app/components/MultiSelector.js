@@ -20,7 +20,9 @@ export default class MultiSelector extends Component {
       keepOpenByAreaClick: false,
       dropdownUp: false,
       selectAll: false,
-      selectAllText: 'Select all'
+      selectAllText: 'Select all',
+      unselectAllText: 'Unselect all',
+      selectAllToggle: false
     }
 
     this.settings = Object.assign(settingsDefault, this.settings);
@@ -56,6 +58,7 @@ export default class MultiSelector extends Component {
     if (this.multiple && this.settings.selectAll) {
       this.msSelectAll = document.createElement('li');
       this.msSelectAll.classList.add('ms-dropdown__select-all');
+      this.msSelectAll.classList.toggle('ms-dropdown__select-all-toggling', this.settings.selectAllToggle);
       let selectAllTextNode = document.createTextNode(this.settings.selectAllText);
       this.msSelectAll.appendChild(selectAllTextNode);
       this.msDropDown.appendChild(this.msSelectAll);
@@ -164,10 +167,14 @@ export default class MultiSelector extends Component {
         this.msTitleText.textContent = this.settings.allSelectedPlaceholder;
       }
 
-      if (this.isAllSelected()) {
-        this.msSelectAll.classList.add('ms-dropdown__select-all_active');
-      } else {
-        this.msSelectAll.classList.remove('ms-dropdown__select-all_active');
+      if (this.settings.selectAll) {
+        if (this.isAllSelected()) {
+          this.msSelectAll.classList.add('ms-dropdown__select-all_active');
+          this.msSelectAll.textContent = this.settings.unselectAllText;
+        } else {
+          this.msSelectAll.classList.remove('ms-dropdown__select-all_active');
+          this.msSelectAll.textContent = this.settings.selectAllText;
+        }
       }
 
     } else {
@@ -184,7 +191,21 @@ export default class MultiSelector extends Component {
   // Maybe later this func will be public for programmatically select all.
   _selectAll() {
     if (this.msSelectAll.classList.contains('ms-dropdown__select-all_active')) {
+
+      if (this.settings.selectAllToggle) {
+        this.msSelectAll.classList.remove('ms-dropdown__select-all_active');
+        this.msSelectAll.textContent = this.settings.selectAllText;
+        this._clearNativeMultipleOptions();
+        this.msItems.forEach((item) => {
+          item.classList.remove('ms-dropdown__item_active');
+        });
+        this.msTitleText.textContent = this.ui.msPlaceholder[0] ? this.ui.msPlaceholder[0].text : this.msItems[0].textContent;
+      }
       return;
+    }
+
+    if (this.settings.selectAllToggle) {
+      this.msSelectAll.textContent = this.settings.unselectAllText;
     }
 
     this.msSelectAll.classList.add('ms-dropdown__select-all_active');

@@ -5,12 +5,15 @@ let MultiSelector = require('../src/app/components/MultiSelector').default;
 let plainSelect;
 let placeholderSelect;
 let multipleSelect;
+let multipleSelectNoPlaceholder;
 
 beforeEach(function() {
   global.document = jsdom();
   _createPlainSelect();
   _createSelectWithPlaceholder();
   _createSelectMultiple();
+  _createSelectMultipleNoPlaceholder()
+
 });
 
 describe('MultiSelector', function() {
@@ -174,6 +177,88 @@ describe('MultiSelector', function() {
     }, 600);
   })
 
+  it('shoud toggle all if selectAllToggle settings', function() {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelect,
+      settings: {
+        selectAll: true,
+        selectAllToggle: true
+      }
+    });
+    let selectAllBtn = selectorInstance.msSelectAll;
+    selectAllBtn.click();
+    selectAllBtn.click();
+    let expected = [];
+    let actual = selectorInstance.getValue();
+    expect(expected).to.deep.equal(actual);
+  })
+
+  it('shoud set placeholder to title after select all unselect.', function() {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelect,
+      settings: {
+        selectAll: true,
+        selectAllToggle: true
+      }
+    });
+    let selectAllBtn = selectorInstance.msSelectAll;
+    selectAllBtn.click();
+    selectAllBtn.click();
+    let expected = 'Select your turtle';
+    let actual = selectorInstance.msTitleText.textContent;
+    expect(expected).to.equal(actual);
+  })
+
+  it('shoud set placeholder to title after select all unselect (no placeholder select).', function() {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectNoPlaceholder,
+      settings: {
+        selectAll: true,
+        selectAllToggle: true
+      }
+    });
+    let selectAllBtn = selectorInstance.msSelectAll;
+    selectAllBtn.click();
+    selectAllBtn.click();
+    let expected = selectorInstance.msItems[0].textContent;
+    let actual = selectorInstance.msTitleText.textContent;
+    expect(expected).to.equal(actual);
+  })
+
+  it('shoud set unselectAll text.', function() {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectNoPlaceholder,
+      settings: {
+        selectAll: true,
+        selectAllToggle: true,
+        unselectAllText: 'drop'
+      }
+    });
+    let selectAllBtn = selectorInstance.msSelectAll;
+    selectAllBtn.click();
+    let expected = 'drop';
+    let actual = selectAllBtn.textContent;
+    expect(expected).to.equal(actual);
+  })
+
+  it('shoud set selectAll text after unselect item.', function() {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectNoPlaceholder,
+      settings: {
+        selectAll: true,
+        selectAllToggle: true,
+        selectAllText: 'all'
+      }
+    });
+    let firstOption = selectorInstance.msItems[0];
+    let selectAllBtn = selectorInstance.msSelectAll;
+    selectAllBtn.click();
+    firstOption.click();
+    let expected = 'all';
+    let actual = selectAllBtn.textContent;
+    expect(expected).to.equal(actual);
+  })
+
 
 });
 
@@ -242,6 +327,24 @@ function _createSelectMultiple() {
   })
 
   selectWrapper.appendChild(multipleSelect);
+}
+
+function _createSelectMultipleNoPlaceholder() {
+  let selectData = ['Leonardo', 'Donatello', 'Michelangelo', 'Raphael'];
+  let selectWrapper = document.createElement('div');
+  multipleSelectNoPlaceholder = document.createElement('select');
+  multipleSelectNoPlaceholder.setAttribute('multiple', true);
+
+  selectData.forEach((item) => {
+    let normalizedItem = item.trim().toLowerCase();
+    let option = document.createElement('option');
+    let optionText = document.createTextNode(item);
+    option.setAttribute('value', normalizedItem);
+    option.appendChild(optionText);
+    multipleSelectNoPlaceholder.appendChild(option);
+  })
+
+  selectWrapper.appendChild(multipleSelectNoPlaceholder);
 }
 
 
