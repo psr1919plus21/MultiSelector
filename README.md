@@ -63,6 +63,7 @@ Here an example of initialisation *MultiSelector* with settings.
         allSelectedPlaceholder: 'you select all cats',
         selectAll: false,
         selectAllText: 'Select all',
+        unselectAllText: 'Unselect all',
         selectAllToggle: false
       }
     });
@@ -84,6 +85,8 @@ Here an example of initialisation *MultiSelector* with settings.
  **selectAll** – This option include select all button before all your select items.
  
  **selectAllText** – This string define select all button text.
+ 
+ **unselectAllText** – This string define unselect all button text.
 
  **selectAllToggle** – If pressing select all button again all items will be unselected.
 
