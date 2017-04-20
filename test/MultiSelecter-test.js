@@ -225,6 +225,22 @@ describe('MultiSelector', function() {
     expect(expected).to.equal(actual);
   })
 
+  it('shoud set unselectAll text.', function() {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectNoPlaceholder,
+      settings: {
+        selectAll: true,
+        selectAllToggle: true,
+        unselectAllText: 'drop'
+      }
+    });
+    let selectAllBtn = selectorInstance.msSelectAll;
+    selectAllBtn.click();
+    let expected = 'drop';
+    let actual = selectAllBtn.textContent;
+    expect(expected).to.equal(actual);
+  })
+
 
 });
 
