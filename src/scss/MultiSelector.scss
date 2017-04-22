@@ -95,7 +95,8 @@ $optionHeight: 50px;
 
 
 .ms-dropdown__item,
-.ms-dropdown__select-all {
+.ms-dropdown__select-all,
+.ms-dropdown__clear-all {
   cursor: pointer;
   padding: 16px;
   -webkit-touch-callout: none;
@@ -107,6 +108,24 @@ $optionHeight: 50px;
   &:hover {
     background: #f7f7f7;
     color: #333;
+  }
+}
+
+.ms-dropdown__clear-all {
+  position: relative;
+  &:before {
+    content: 'x';
+    position: absolute;
+    right: 9px;
+    top: 13px;
+    background: #f7f7f7;
+    border: 1px solid #8a8a8a;
+    line-height: 22px;
+    border-radius: 4px;
+    width: 22px;
+    height: 22px;
+    text-align: center;
+    cursor: pointer;
   }
 }
 

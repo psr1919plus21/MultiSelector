@@ -22,7 +22,9 @@ export default class MultiSelector extends Component {
       selectAll: false,
       selectAllText: 'Select all',
       unselectAllText: 'Unselect all',
-      selectAllToggle: false
+      selectAllToggle: false,
+      clearAll: false,
+      clearAllText: 'Clear all'
     }
 
     this.settings = Object.assign(settingsDefault, this.settings);
@@ -54,6 +56,21 @@ export default class MultiSelector extends Component {
     this.msDropDown = document.createElement('ul');
     this.msDropDown.classList.add('ms-dropdown');
 
+    // Add clear all button
+    if (this.multiple && this.settings.clearAll) {
+      this.msClearAll = document.createElement('li');
+      this.msClearAll.classList.add('ms-dropdown__clear-all');
+      let clearAllTextNode = document.createTextNode(this.settings.clearAllText);
+      this.msClearAll.appendChild(clearAllTextNode);
+      this.msDropDown.appendChild(this.msClearAll);
+
+      this.msClearAll.addEventListener('click', this._clearAll.bind(this));
+    } else if (this.settings.clearAll) {
+      console.warn('Clear all button can be attached to multiple select only.');
+      console.warn(this.el);
+      console.log('Read multiple attribute documentation for details: https://www.w3schools.com/tags/att_select_multiple.asp');
+    }
+
     // Add select all button
     if (this.multiple && this.settings.selectAll) {
       this.msSelectAll = document.createElement('li');
@@ -69,6 +86,8 @@ export default class MultiSelector extends Component {
       console.warn(this.el);
       console.log('Read multiple attribute documentation for details: https://www.w3schools.com/tags/att_select_multiple.asp');
     }
+
+
 
     this.ui.msOption.forEach((option) => {
       let msItem = document.createElement('li');
@@ -216,6 +235,18 @@ export default class MultiSelector extends Component {
       this._setNativeMultipleOptions(selectedValue);
     });
     this.msTitleText.textContent = this.settings.allSelectedPlaceholder;
+  }
+
+  // Maybe later this func will be public for programmatically clear all.
+  _clearAll() {
+    console.log('clear')
+    this.msSelectAll.classList.remove('ms-dropdown__select-all_active');
+    this.msSelectAll.textContent = this.settings.selectAllText;
+    this._clearNativeMultipleOptions();
+    this.msItems.forEach((item) => {
+      item.classList.remove('ms-dropdown__item_active');
+    });
+    this.msTitleText.textContent = this.ui.msPlaceholder[0] ? this.ui.msPlaceholder[0].text : this.msItems[0].textContent;
   }
 
   _dropDownClose() {
