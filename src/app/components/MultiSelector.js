@@ -46,11 +46,10 @@ export default class MultiSelector extends Component {
 
 
     // MultiSelector placeholder.
-    if (this.ui.msPlaceholder.length) {
-      this.msTitleTextNode = document.createTextNode(this.ui.msPlaceholder[0].text);
-    } else if (this.ui.msOption.length) {
-      this.msTitleTextNode = document.createTextNode(this.ui.msOption[0].text);
+    if (!this.ui.msPlaceholder.length) {
+      this.ui.msPlaceholder = [{text: this.settings.selectAllText}];
     }
+    this.msTitleTextNode = document.createTextNode(this.ui.msPlaceholder[0].text);
 
     // Multiselector dropdown.
     this.msDropDown = document.createElement('ul');

@@ -220,7 +220,7 @@ describe('MultiSelector', function() {
     let selectAllBtn = selectorInstance.msSelectAll;
     selectAllBtn.click();
     selectAllBtn.click();
-    let expected = selectorInstance.msItems[0].textContent;
+    let expected = 'Select all';
     let actual = selectorInstance.msTitleText.textContent;
     expect(expected).to.equal(actual);
   })

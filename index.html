@@ -147,16 +147,18 @@
       <h2 class="ms-example__title">Set dropdown select all toggle.</h2>
       <div class="ms-example__content">
 
-        <form  class="test-form">
+        <form  class="test-form2">
           <div class="select-wrapper">
             <select class="select-all-toggle" multiple>
-              <option  value="" disabled selected>Select your turtle</option>
+              <!-- <option  value="" disabled selected>Select your turtle</option> -->
               <option value="donatello">Donatello</option>
               <option value="leonardo">Leonardo</option>
               <option value="michelangelo">Michelangelo</option>
               <option value="raphael">Raphael</option>
             </select>
           </div>
+
+          <input type="submit" class="submit-btn" value="submit">
 
         </form>
 
@@ -222,15 +224,16 @@
         selectAllText: 'Выбрать все',
         unselectAllText: 'Отменить',
         selectAllToggle: true,
-        clearAll: true
+        clearAll: true,
+        clearAllText: 'Убрать'
       }
     });
 
-    document.querySelector('.test-form').addEventListener('submit', function(e) {
+    document.querySelector('.test-form2').addEventListener('submit', function(e) {
       e.preventDefault();
 
-      let dataRaw = multipleSelect.getValue();
-      let dataStringify = multipleSelect.getValueAsString();
+      let dataRaw = selectAllToggleSelect.getValue();
+      let dataStringify = selectAllToggleSelect.getValueAsString();
       console.log(dataRaw);
       console.log(dataStringify);
 
