@@ -238,7 +238,6 @@ export default class MultiSelector extends Component {
 
   // Maybe later this func will be public for programmatically clear all.
   _clearAll() {
-    console.log('clear')
     this.msSelectAll.classList.remove('ms-dropdown__select-all_active');
     this.msSelectAll.textContent = this.settings.selectAllText;
     this._clearNativeMultipleOptions();
@@ -296,12 +295,6 @@ export default class MultiSelector extends Component {
     }
   }
 
-  _multipleSelectPresets() {
-    if (this.multiple) {
-      this.settings.keepOpenByAreaClick = true;
-    }
-  }
-
   _hasParentClass(el, classname) {
     let parent = el.parentNode;
     let parentHasClass = false;
@@ -347,7 +340,6 @@ export default class MultiSelector extends Component {
 
   _applySettings() {
     this._setCustomTitleIcon.call(this);
-    this._multipleSelectPresets.call(this);
     this._closeDropdownByArea.call(this);
     this._setDropdownUp.call(this);
     this._setDropdownNoFlow.call(this);
