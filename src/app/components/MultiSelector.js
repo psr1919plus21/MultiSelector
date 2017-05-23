@@ -87,7 +87,11 @@ export default class MultiSelector extends Component {
     }
 
 
+    if (this.ui.msOptgroup.length) {
+      console.log('create optgroups here');
+    }
 
+    // Add select options
     this.ui.msOption.forEach((option) => {
       let msItem = document.createElement('li');
       msItem.classList.add('ms-dropdown__item');
