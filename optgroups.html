@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Multiselecter optgroups</title>
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+
+<section class="section section_index">
+    <!-- OPTGROUPS -->
+    <article class="ms-example">
+      <h2 class="ms-example__title">Optgroups select</h2>
+      <div class="ms-example__content">
+        <h3>It's time to choose</h3>
+        <div class="select-wrapper">
+          <select class="ms-select-optgroups" multiple>
+            <option  value="" disabled selected>Select your pet</option>
+            <optgroup label="Cats">
+                <option value="Tom">Tom</option>
+                <option value="garfield">Garfield</option>
+                <option value="Sylvester">Sylvester</option>
+                <option value="Jasper">Jasper</option>
+            </optgroup>
+
+            <optgroup label="dogs">
+              <option value="spyke">Spyke</option>
+              <option value="bethooween">Bethooween</option>
+              <option value="rex">Rex</option>
+              <option value="barboss">Barboss</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <div class="container">
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis est eveniet possimus hic alias, error nemo molestias nam dicta itaque vero quia veniam iure officia expedita blanditiis quod assumenda dolores!</p>
+          <p>Obcaecati illum explicabo, hic sed aliquam beatae eum molestiae. Ad totam doloribus porro tenetur explicabo officia cupiditate voluptas, earum, asperiores, impedit illo. Et laudantium mollitia rerum accusantium nobis quis tenetur!</p>
+          <p>Quo saepe provident, veritatis officia, qui hic at deleniti vero magni ut voluptatem minus reiciendis sit exercitationem dicta molestias quas natus iusto obcaecati consequuntur animi iste! Molestias numquam, recusandae quidem.</p>
+        </div>
+
+      </div>
+    </article>
+</section>
+
+
+<script src="dist/multiselecter.js"></script>
+<script>
+  let optgroupsMultiselector = new MultiSelector({
+    el: document.querySelector('.ms-select-optgroups')
+  });
+</script>
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

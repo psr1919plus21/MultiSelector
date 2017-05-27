@@ -87,17 +87,58 @@ export default class MultiSelector extends Component {
     }
 
 
+    if (this.ui.msOptgroup.length) {
+      console.log('create optgroups here');
+      this.ui.msOptgroup.forEach((optgroup) => {
+        let normalizedOptgroupLabel = optgroup.getAttribute('label')
+          .trim()
+          .toLowerCase();
+        console.log(normalizedOptgroupLabel);
 
-    this.ui.msOption.forEach((option) => {
-      let msItem = document.createElement('li');
+        let msOptgroupWrapper = document.createElement('li');
+        msOptgroupWrapper.classList.add('ms-optgroup-wrapper');
+
+        let msOptgroupTitle = document.createElement('div');
+        msOptgroupTitle.classList.add('ms-optgroup');
+        let optgroupTextNode = document.createTextNode(normalizedOptgroupLabel);
+        msOptgroupTitle.appendChild(optgroupTextNode);
+        msOptgroupTitle.setAttribute('data-optgroup', normalizedOptgroupLabel);
+        msOptgroupWrapper.appendChild(msOptgroupTitle);
+
+        optgroup.querySelectorAll('option').forEach((option) => {
+          msOptgroupWrapper.appendChild(createOption(option, 'div', {optgroup: normalizedOptgroupLabel}));
+        });
+
+        this.msDropDown.appendChild(msOptgroupWrapper);
+      });
+      this.msOptgroups = this.msDropDown.querySelectorAll('.ms-optgroup');
+
+    } else {
+      // Add select options
+      this.ui.msOption.forEach((option) => {
+        this.msDropDown.appendChild(createOption(option));
+      });
+
+    }
+    this.msItems = this.msDropDown.querySelectorAll('.ms-dropdown__item');
+
+    function createOption(option, tagName='li', dataAttributes) {
+      let msItem = document.createElement(tagName);
       msItem.classList.add('ms-dropdown__item');
       let optionTextNode = document.createTextNode(option.innerHTML.trim());
       let optionValue = option.getAttribute('value');
       msItem.appendChild(optionTextNode);
       msItem.setAttribute('data-value', optionValue);
-      this.msDropDown.appendChild(msItem);
-    });
-    this.msItems = this.msDropDown.querySelectorAll('.ms-dropdown__item');
+
+      if (dataAttributes) {
+        for(let optionalAttr in dataAttributes) {
+          msItem.setAttribute(`data-${optionalAttr}`, dataAttributes[optionalAttr]);
+        };
+      }
+      return msItem;
+    }
+
+
 
 
     this.msTitleText.appendChild(this.msTitleTextNode);
