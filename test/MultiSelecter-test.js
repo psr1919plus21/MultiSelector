@@ -372,11 +372,11 @@ function _createSelectMultipleNoPlaceholder() {
 function _createSelectWithOptgroups() {
   let selectData = [
     {
-      optgroupName: 'cats',
+      optgroupName: ' cAts',
       optgroupItems: ['Tom', 'Sylvester', 'Felix', 'Garfield']
     },
     {
-      optgroupName: 'dogs',
+      optgroupName: 'dogs   ',
       optgroupItems: ['Spyke', 'Bethoween', 'Scooby-Do', 'Bascerweil']
     }
 
