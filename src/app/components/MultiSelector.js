@@ -121,11 +121,6 @@ export default class MultiSelector extends Component {
     }
     this.msItems = this.msDropDown.querySelectorAll('.ms-dropdown__item');
 
-
-
-
-
-
     this.msTitleText.appendChild(this.msTitleTextNode);
     this.msSelector.appendChild(this.msTitle);
     this.msSelector.appendChild(this.msDropDown);
@@ -141,6 +136,13 @@ export default class MultiSelector extends Component {
     this.msItems.forEach((item) => {
       item.addEventListener('click', this._selectItem.bind(this));
     });
+
+    if (this.msOptgroups) {
+      this.msOptgroups.forEach((optgroup) => {
+        optgroup.addEventListener('click', this._selectOptgroup.bind(this));
+      });
+    }
+
 
   }
 
@@ -197,6 +199,21 @@ export default class MultiSelector extends Component {
       };
     }
     return msItem;
+  }
+
+  _selectOptgroup(e) {
+    console.log('optgroup handler');
+    let currentOptgroup = e.target.getAttribute('data-optgroup');
+    this._clearNativeMultipleOptions();
+    this.msItems.forEach((item) => {
+      if (item.getAttribute('data-optgroup') === currentOptgroup) {
+        console.log(item);
+        item.classList.add('ms-dropdown__item_active');
+        let selectedValue = item.getAttribute('data-value');
+        this._setNativeMultipleOptions(selectedValue);
+      }
+    });
+    this.msTitleText.textContent = currentOptgroup;
   }
 
   // Maybe later this func will be public for programmatically selection particular items.
