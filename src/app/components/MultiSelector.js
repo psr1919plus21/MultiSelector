@@ -93,7 +93,6 @@ export default class MultiSelector extends Component {
         let normalizedOptgroupLabel = optgroup.getAttribute('label')
           .trim()
           .toLowerCase();
-        console.log(normalizedOptgroupLabel);
 
         let msOptgroupWrapper = document.createElement('li');
         msOptgroupWrapper.classList.add('ms-optgroup-wrapper');
@@ -106,7 +105,7 @@ export default class MultiSelector extends Component {
         msOptgroupWrapper.appendChild(msOptgroupTitle);
 
         optgroup.querySelectorAll('option').forEach((option) => {
-          msOptgroupWrapper.appendChild(createOption(option, 'div', {optgroup: normalizedOptgroupLabel}));
+          msOptgroupWrapper.appendChild(this._createOption(option, 'div', {optgroup: normalizedOptgroupLabel}));
         });
 
         this.msDropDown.appendChild(msOptgroupWrapper);
@@ -116,30 +115,11 @@ export default class MultiSelector extends Component {
     } else {
       // Add select options
       this.ui.msOption.forEach((option) => {
-        this.msDropDown.appendChild(createOption(option));
+        this.msDropDown.appendChild(this._createOption(option));
       });
 
     }
     this.msItems = this.msDropDown.querySelectorAll('.ms-dropdown__item');
-
-    function createOption(option, tagName='li', dataAttributes) {
-      let msItem = document.createElement(tagName);
-      msItem.classList.add('ms-dropdown__item');
-      let optionTextNode = document.createTextNode(option.innerHTML.trim());
-      let optionValue = option.getAttribute('value');
-      msItem.appendChild(optionTextNode);
-      msItem.setAttribute('data-value', optionValue);
-
-      if (dataAttributes) {
-        for(let optionalAttr in dataAttributes) {
-          msItem.setAttribute(`data-${optionalAttr}`, dataAttributes[optionalAttr]);
-        };
-      }
-      return msItem;
-    }
-
-
-
 
     this.msTitleText.appendChild(this.msTitleTextNode);
     this.msSelector.appendChild(this.msTitle);
@@ -156,6 +136,13 @@ export default class MultiSelector extends Component {
     this.msItems.forEach((item) => {
       item.addEventListener('click', this._selectItem.bind(this));
     });
+
+    if (this.msOptgroups) {
+      this.msOptgroups.forEach((optgroup) => {
+        optgroup.addEventListener('click', this._selectOptgroup.bind(this));
+      });
+    }
+
 
   }
 
@@ -196,6 +183,37 @@ export default class MultiSelector extends Component {
       }, 300);
     }
     this.msSelector.classList.toggle('ms-wrapper_active');
+  }
+
+  _createOption(option, tagName='li', dataAttributes) {
+    let msItem = document.createElement(tagName);
+    msItem.classList.add('ms-dropdown__item');
+    let optionTextNode = document.createTextNode(option.innerHTML.trim());
+    let optionValue = option.getAttribute('value');
+    msItem.appendChild(optionTextNode);
+    msItem.setAttribute('data-value', optionValue);
+
+    if (dataAttributes) {
+      for(let optionalAttr in dataAttributes) {
+        msItem.setAttribute(`data-${optionalAttr}`, dataAttributes[optionalAttr]);
+      };
+    }
+    return msItem;
+  }
+
+  _selectOptgroup(e) {
+    console.log('optgroup handler');
+    let currentOptgroup = e.target.getAttribute('data-optgroup');
+    this._clearNativeMultipleOptions();
+    this.msItems.forEach((item) => {
+      if (item.getAttribute('data-optgroup') === currentOptgroup) {
+        console.log(item);
+        item.classList.add('ms-dropdown__item_active');
+        let selectedValue = item.getAttribute('data-value');
+        this._setNativeMultipleOptions(selectedValue);
+      }
+    });
+    this.msTitleText.textContent = currentOptgroup;
   }
 
   // Maybe later this func will be public for programmatically selection particular items.

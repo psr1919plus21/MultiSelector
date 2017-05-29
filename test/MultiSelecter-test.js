@@ -272,7 +272,6 @@ describe('MultiSelector', function() {
     let selectorInstance = new MultiSelector({
       el: multipleSelectWithOptgroups
     });
-    console.log(selectorInstance.msOptgroups);
     let msOptgroup = selectorInstance.msOptgroups[0];
 
 
