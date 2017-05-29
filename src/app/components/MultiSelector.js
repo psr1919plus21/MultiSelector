@@ -93,7 +93,6 @@ export default class MultiSelector extends Component {
         let normalizedOptgroupLabel = optgroup.getAttribute('label')
           .trim()
           .toLowerCase();
-        console.log(normalizedOptgroupLabel);
 
         let msOptgroupWrapper = document.createElement('li');
         msOptgroupWrapper.classList.add('ms-optgroup-wrapper');
@@ -106,7 +105,7 @@ export default class MultiSelector extends Component {
         msOptgroupWrapper.appendChild(msOptgroupTitle);
 
         optgroup.querySelectorAll('option').forEach((option) => {
-          msOptgroupWrapper.appendChild(createOption(option, 'div', {optgroup: normalizedOptgroupLabel}));
+          msOptgroupWrapper.appendChild(this._createOption(option, 'div', {optgroup: normalizedOptgroupLabel}));
         });
 
         this.msDropDown.appendChild(msOptgroupWrapper);
@@ -116,27 +115,13 @@ export default class MultiSelector extends Component {
     } else {
       // Add select options
       this.ui.msOption.forEach((option) => {
-        this.msDropDown.appendChild(createOption(option));
+        this.msDropDown.appendChild(this._createOption(option));
       });
 
     }
     this.msItems = this.msDropDown.querySelectorAll('.ms-dropdown__item');
 
-    function createOption(option, tagName='li', dataAttributes) {
-      let msItem = document.createElement(tagName);
-      msItem.classList.add('ms-dropdown__item');
-      let optionTextNode = document.createTextNode(option.innerHTML.trim());
-      let optionValue = option.getAttribute('value');
-      msItem.appendChild(optionTextNode);
-      msItem.setAttribute('data-value', optionValue);
 
-      if (dataAttributes) {
-        for(let optionalAttr in dataAttributes) {
-          msItem.setAttribute(`data-${optionalAttr}`, dataAttributes[optionalAttr]);
-        };
-      }
-      return msItem;
-    }
 
 
 
@@ -196,6 +181,22 @@ export default class MultiSelector extends Component {
       }, 300);
     }
     this.msSelector.classList.toggle('ms-wrapper_active');
+  }
+
+  _createOption(option, tagName='li', dataAttributes) {
+    let msItem = document.createElement(tagName);
+    msItem.classList.add('ms-dropdown__item');
+    let optionTextNode = document.createTextNode(option.innerHTML.trim());
+    let optionValue = option.getAttribute('value');
+    msItem.appendChild(optionTextNode);
+    msItem.setAttribute('data-value', optionValue);
+
+    if (dataAttributes) {
+      for(let optionalAttr in dataAttributes) {
+        msItem.setAttribute(`data-${optionalAttr}`, dataAttributes[optionalAttr]);
+      };
+    }
+    return msItem;
   }
 
   // Maybe later this func will be public for programmatically selection particular items.
