@@ -280,6 +280,21 @@ describe('MultiSelector', function() {
     expect(expected).to.equal(actual);
   })
 
+  it('shoud select all optgroups items by click on optgroup title', function() {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectWithOptgroups
+    });
+    let msOptgroup = selectorInstance.msOptgroups[0];
+    let msOptgroupLabel = msOptgroup.textContent;
+    let currentGroupItems = selectorInstance.msOptgroupItems[msOptgroupLabel];
+    msOptgroup.click();
+    let expected = true;
+    let actual = currentGroupItems.every((item) => {
+      return item.classList.contains('ms-dropdown__item_active');
+    });
+    expect(expected).to.equal(actual);
+  })
+
 
 });
 

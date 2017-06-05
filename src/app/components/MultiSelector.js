@@ -89,6 +89,8 @@ export default class MultiSelector extends Component {
 
     if (this.ui.msOptgroup.length) {
       console.log('create optgroups here');
+      this.msOptgroupItems = {};
+
       this.ui.msOptgroup.forEach((optgroup) => {
         let normalizedOptgroupLabel = optgroup.getAttribute('label')
           .trim()
@@ -104,8 +106,12 @@ export default class MultiSelector extends Component {
         msOptgroupTitle.setAttribute('data-optgroup', normalizedOptgroupLabel);
         msOptgroupWrapper.appendChild(msOptgroupTitle);
 
+        this.msOptgroupItems[normalizedOptgroupLabel] = new Array();
+
         optgroup.querySelectorAll('option').forEach((option) => {
-          msOptgroupWrapper.appendChild(this._createOption(option, 'div', {optgroup: normalizedOptgroupLabel}));
+          let optgroupItem = this._createOption(option, 'div', {optgroup: normalizedOptgroupLabel});
+          msOptgroupWrapper.appendChild(optgroupItem);
+          this.msOptgroupItems[normalizedOptgroupLabel].push(optgroupItem);
         });
 
         this.msDropDown.appendChild(msOptgroupWrapper);
@@ -207,7 +213,6 @@ export default class MultiSelector extends Component {
     this._clearNativeMultipleOptions();
     this.msItems.forEach((item) => {
       if (item.getAttribute('data-optgroup') === currentOptgroup) {
-        console.log(item);
         item.classList.add('ms-dropdown__item_active');
         let selectedValue = item.getAttribute('data-value');
         this._setNativeMultipleOptions(selectedValue);
