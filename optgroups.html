@@ -49,8 +49,13 @@
 <script src="dist/multiselecter.js"></script>
 <script>
   let optgroupsMultiselector = new MultiSelector({
-    el: document.querySelector('.ms-select-optgroups')
+    el: document.querySelector('.ms-select-optgroups'),
+    settings: {
+      optgroupsToggle: false
+    }
   });
+  console.log(optgroupsMultiselector.msItems);
+  console.log(optgroupsMultiselector.msOptgroupItems);
 </script>
 
 

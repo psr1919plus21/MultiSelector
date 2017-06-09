@@ -24,7 +24,9 @@ export default class MultiSelector extends Component {
       unselectAllText: 'Unselect all',
       selectAllToggle: false,
       clearAll: false,
-      clearAllText: 'Clear all'
+      clearAllText: 'Clear all',
+      optgroupsToggle: true
+
     }
 
     this.settings = Object.assign(settingsDefault, this.settings);
@@ -86,9 +88,10 @@ export default class MultiSelector extends Component {
       console.log('Read multiple attribute documentation for details: https://www.w3schools.com/tags/att_select_multiple.asp');
     }
 
-
+    // Create optgroups.
     if (this.ui.msOptgroup.length) {
-      console.log('create optgroups here');
+      this.msOptgroupItems = {};
+
       this.ui.msOptgroup.forEach((optgroup) => {
         let normalizedOptgroupLabel = optgroup.getAttribute('label')
           .trim()
@@ -104,8 +107,12 @@ export default class MultiSelector extends Component {
         msOptgroupTitle.setAttribute('data-optgroup', normalizedOptgroupLabel);
         msOptgroupWrapper.appendChild(msOptgroupTitle);
 
+        this.msOptgroupItems[normalizedOptgroupLabel] = new Array();
+
         optgroup.querySelectorAll('option').forEach((option) => {
-          msOptgroupWrapper.appendChild(this._createOption(option, 'div', {optgroup: normalizedOptgroupLabel}));
+          let optgroupItem = this._createOption(option, 'div', {optgroup: normalizedOptgroupLabel});
+          msOptgroupWrapper.appendChild(optgroupItem);
+          this.msOptgroupItems[normalizedOptgroupLabel].push(optgroupItem);
         });
 
         this.msDropDown.appendChild(msOptgroupWrapper);
@@ -202,18 +209,42 @@ export default class MultiSelector extends Component {
   }
 
   _selectOptgroup(e) {
-    console.log('optgroup handler');
-    let currentOptgroup = e.target.getAttribute('data-optgroup');
-    this._clearNativeMultipleOptions();
+    let currentOptgroup = e.target;
+    let currentOptgroupTitle = currentOptgroup.getAttribute('data-optgroup');
+
+    if (this.settings.optgroupsToggle) {
+      currentOptgroup.classList.toggle('ms-optgroup_active');
+      if (currentOptgroup.classList.contains('ms-optgroup_active')) {
+        this._selectOptgroupItems(currentOptgroupTitle);
+      } else {
+        this._unselectOptgroupItems(currentOptgroupTitle);
+      }
+    } else if (!currentOptgroup.classList.contains('ms-optgroup_active')) {
+      currentOptgroup.classList.add('ms-optgroup_active');
+      this._selectOptgroupItems(currentOptgroupTitle);
+    }
+  }
+
+  _selectOptgroupItems(currentOptgroupTitle) {
     this.msItems.forEach((item) => {
-      if (item.getAttribute('data-optgroup') === currentOptgroup) {
-        console.log(item);
+      if (item.getAttribute('data-optgroup') === currentOptgroupTitle) {
         item.classList.add('ms-dropdown__item_active');
         let selectedValue = item.getAttribute('data-value');
         this._setNativeMultipleOptions(selectedValue);
       }
     });
-    this.msTitleText.textContent = currentOptgroup;
+    this.msTitleText.textContent = currentOptgroupTitle;
+  }
+
+  _unselectOptgroupItems(currentOptgroupTitle) {
+    this.msItems.forEach((item) => {
+      if (item.getAttribute('data-optgroup') === currentOptgroupTitle) {
+        item.classList.remove('ms-dropdown__item_active');
+        let unselectValue = item.getAttribute('data-value');
+        this._removeNativeMultipleOptions(unselectValue);
+      }
+    });
+    this.msTitleText.textContent = currentOptgroupTitle;
   }
 
   // Maybe later this func will be public for programmatically selection particular items.
@@ -381,6 +412,15 @@ export default class MultiSelector extends Component {
       let currentNativeOption = this.el.options[i];
       if (_selectedValue === currentNativeOption.value) {
         currentNativeOption.selected = true;
+      }
+    }
+  }
+
+  _removeNativeMultipleOptions(_unselectValue) {
+    for (let i = 0; i < this.el.options.length; i++) {
+      let currentNativeOption = this.el.options[i];
+      if (_unselectValue === currentNativeOption.value) {
+        currentNativeOption.selected = false;
       }
     }
   }

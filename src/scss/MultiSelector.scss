@@ -119,6 +119,15 @@ $optionHeight: 50px;
   }
 }
 
+.ms-optgroup_active {
+  background: #666;
+  color: #fff;
+  &:hover {
+    background: #666;
+    color: #fff;
+  }
+}
+
 .ms-dropdown__clear-all {
   position: relative;
   &:before {
