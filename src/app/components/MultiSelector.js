@@ -90,34 +90,7 @@ export default class MultiSelector extends Component {
 
     // Create optgroups.
     if (this.ui.msOptgroup.length) {
-      this.msOptgroupItems = {};
-
-      this.ui.msOptgroup.forEach((optgroup) => {
-        let normalizedOptgroupLabel = optgroup.getAttribute('label')
-          .trim()
-          .toLowerCase();
-
-        let msOptgroupWrapper = document.createElement('li');
-        msOptgroupWrapper.classList.add('ms-optgroup-wrapper');
-
-        let msOptgroupTitle = document.createElement('div');
-        msOptgroupTitle.classList.add('ms-optgroup');
-        let optgroupTextNode = document.createTextNode(normalizedOptgroupLabel);
-        msOptgroupTitle.appendChild(optgroupTextNode);
-        msOptgroupTitle.setAttribute('data-optgroup', normalizedOptgroupLabel);
-        msOptgroupWrapper.appendChild(msOptgroupTitle);
-
-        this.msOptgroupItems[normalizedOptgroupLabel] = new Array();
-
-        optgroup.querySelectorAll('option').forEach((option) => {
-          let optgroupItem = this._createOption(option, 'div', {optgroup: normalizedOptgroupLabel});
-          msOptgroupWrapper.appendChild(optgroupItem);
-          this.msOptgroupItems[normalizedOptgroupLabel].push(optgroupItem);
-        });
-
-        this.msDropDown.appendChild(msOptgroupWrapper);
-      });
-      this.msOptgroups = this.msDropDown.querySelectorAll('.ms-optgroup');
+      this._createOptgroups();
 
     } else {
       // Add select options
@@ -190,6 +163,37 @@ export default class MultiSelector extends Component {
       }, 300);
     }
     this.msSelector.classList.toggle('ms-wrapper_active');
+  }
+
+  _createOptgroups() {
+    this.msOptgroupItems = {};
+
+    this.ui.msOptgroup.forEach((optgroup) => {
+      let normalizedOptgroupLabel = optgroup.getAttribute('label')
+        .trim()
+        .toLowerCase();
+
+      let msOptgroupWrapper = document.createElement('li');
+      msOptgroupWrapper.classList.add('ms-optgroup-wrapper');
+
+      let msOptgroupTitle = document.createElement('div');
+      msOptgroupTitle.classList.add('ms-optgroup');
+      let optgroupTextNode = document.createTextNode(normalizedOptgroupLabel);
+      msOptgroupTitle.appendChild(optgroupTextNode);
+      msOptgroupTitle.setAttribute('data-optgroup', normalizedOptgroupLabel);
+      msOptgroupWrapper.appendChild(msOptgroupTitle);
+
+      this.msOptgroupItems[normalizedOptgroupLabel] = new Array();
+
+      optgroup.querySelectorAll('option').forEach((option) => {
+        let optgroupItem = this._createOption(option, 'div', {optgroup: normalizedOptgroupLabel});
+        msOptgroupWrapper.appendChild(optgroupItem);
+        this.msOptgroupItems[normalizedOptgroupLabel].push(optgroupItem);
+      });
+
+      this.msDropDown.appendChild(msOptgroupWrapper);
+    });
+    this.msOptgroups = this.msDropDown.querySelectorAll('.ms-optgroup');
   }
 
   _createOption(option, tagName='li', dataAttributes) {
