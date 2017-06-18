@@ -138,7 +138,7 @@ Selector with `optgroups`.
 
 **Example:**
 
-    <select class="ms-select-optgroups" multiple>
+    <select class=".example-classname" multiple>
       <option  value="" disabled selected>Select your pet</option>
       <optgroup label="Cats">
           <option value="Tom">Tom</option>
@@ -158,6 +158,11 @@ Selector with `optgroups`.
         <option value="bonobo">Bonobo</option>
       </optgroup>
     </select>
+    <script>
+       new MultiSelector({
+         el: document.querySelector('.example-classname')
+      });
+    </script>
 
 After this native select will be hidden and *MultiSelector* will be inserted right before native select element.
 
