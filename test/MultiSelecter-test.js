@@ -26,8 +26,6 @@ describe('MultiSelector', function() {
   });
 
   it('should hide native element', function() {
-    console.log('PLAIN SELECT');
-    console.log(plainSelect);
     new MultiSelector({
       el: plainSelect
     });
@@ -315,6 +313,34 @@ describe('MultiSelector', function() {
     expect(expected).to.equal(actual);
   })
 
+  it('shoud set select all title when all items select by optgroups', () => {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectWithOptgroups
+    });
+    let msOptgroups = selectorInstance.msOptgroups;
+    msOptgroups.forEach((optgroup) => optgroup.click());
+
+    let expected = selectorInstance.settings.allSelectedPlaceholder;
+    let actual = selectorInstance.msTitle.textContent;
+    expect(expected).to.equal(actual);
+  });
+
+  it('shoud set separate optgroups to selector title', () => {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectWithOptgroups,
+      settings: {
+        optgroupsSeparator: ' and '
+      }
+    });
+    let msOptgroups = selectorInstance.msOptgroups;
+    msOptgroups[0].click();
+    msOptgroups[1].click();
+
+    let expected = msOptgroups[0].textContent + ' and ' + msOptgroups[1].textContent
+    let actual = selectorInstance.msTitle.textContent;
+    expect(expected).to.equal(actual);
+  });
+
 
 });
 
@@ -412,6 +438,10 @@ function _createSelectWithOptgroups() {
     {
       optgroupName: 'dogs   ',
       optgroupItems: ['Spyke', 'Bethoween', 'Scooby-Do', 'Bascerweil']
+    },
+    {
+      optgroupName: 'apes',
+      optgroupItems: ['Gorilla', 'Bonobo', 'HomoSapiens', 'Proconsule']
     }
 
   ];

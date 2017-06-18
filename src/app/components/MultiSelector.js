@@ -25,11 +25,12 @@ export default class MultiSelector extends Component {
       selectAllToggle: false,
       clearAll: false,
       clearAllText: 'Clear all',
-      optgroupsToggle: true
+      optgroupsToggle: true,
+      optgroupsSeparator: ', '
 
     }
 
-    this.settings = Object.assign(settingsDefault, this.settings);
+    this.settings = Object.assign({}, settingsDefault, this.settings);
 
     this.el.style.display = 'none';
     this.multiple = this.el.getAttribute('multiple') !== null;
@@ -230,6 +231,7 @@ export default class MultiSelector extends Component {
   }
 
   _selectOptgroupItems(currentOptgroupTitle) {
+    let titleText = '';
     this.msItems.forEach((item) => {
       if (item.getAttribute('data-optgroup') === currentOptgroupTitle) {
         item.classList.add('ms-dropdown__item_active');
@@ -237,7 +239,20 @@ export default class MultiSelector extends Component {
         this._setNativeMultipleOptions(selectedValue);
       }
     });
-    this.msTitleText.textContent = currentOptgroupTitle;
+
+    if (this.isAllSelected()) {
+      titleText = this.settings.allSelectedPlaceholder;
+    } else {
+      let optgroupsActive = Array.from(this.msDropDown.querySelectorAll('.ms-optgroup_active'));
+      titleText += optgroupsActive.shift().textContent;
+      optgroupsActive.forEach((optgroup) => {
+        titleText += this.settings.optgroupsSeparator + optgroup.textContent
+      });
+
+    }
+
+
+    this.msTitleText.textContent = titleText;
   }
 
   _unselectOptgroupItems(currentOptgroupTitle) {
