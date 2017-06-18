@@ -1,6 +1,8 @@
 import {expect} from 'chai';
 let beautify_html = require('js-beautify').html;
-let jsdom = require('jsdom').jsdom;
+let JSDOM = require('jsdom').JSDOM;
+let jsdom = new JSDOM();
+
 let MultiSelector = require('../src/app/components/MultiSelector').default;
 let plainSelect;
 let placeholderSelect;
@@ -9,7 +11,7 @@ let multipleSelectNoPlaceholder;
 let multipleSelectWithOptgroups;
 
 beforeEach(function() {
-  global.document = jsdom();
+  global.document = jsdom.window.document;
   _createPlainSelect();
   _createSelectWithPlaceholder();
   _createSelectMultiple();
@@ -24,6 +26,8 @@ describe('MultiSelector', function() {
   });
 
   it('should hide native element', function() {
+    console.log('PLAIN SELECT');
+    console.log(plainSelect);
     new MultiSelector({
       el: plainSelect
     });
