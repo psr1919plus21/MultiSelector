@@ -1,6 +1,8 @@
 import {expect} from 'chai';
 let beautify_html = require('js-beautify').html;
-let jsdom = require('jsdom').jsdom;
+let JSDOM = require('jsdom').JSDOM;
+let jsdom = new JSDOM();
+
 let MultiSelector = require('../src/app/components/MultiSelector').default;
 let plainSelect;
 let placeholderSelect;
@@ -9,7 +11,7 @@ let multipleSelectNoPlaceholder;
 let multipleSelectWithOptgroups;
 
 beforeEach(function() {
-  global.document = jsdom();
+  global.document = jsdom.window.document;
   _createPlainSelect();
   _createSelectWithPlaceholder();
   _createSelectMultiple();
@@ -311,6 +313,34 @@ describe('MultiSelector', function() {
     expect(expected).to.equal(actual);
   })
 
+  it('shoud set select all title when all items select by optgroups', () => {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectWithOptgroups
+    });
+    let msOptgroups = selectorInstance.msOptgroups;
+    msOptgroups.forEach((optgroup) => optgroup.click());
+
+    let expected = selectorInstance.settings.allSelectedPlaceholder;
+    let actual = selectorInstance.msTitle.textContent;
+    expect(expected).to.equal(actual);
+  });
+
+  it('shoud set separate optgroups to selector title', () => {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectWithOptgroups,
+      settings: {
+        optgroupsSeparator: ' and '
+      }
+    });
+    let msOptgroups = selectorInstance.msOptgroups;
+    msOptgroups[0].click();
+    msOptgroups[1].click();
+
+    let expected = msOptgroups[0].textContent + ' and ' + msOptgroups[1].textContent
+    let actual = selectorInstance.msTitle.textContent;
+    expect(expected).to.equal(actual);
+  });
+
 
 });
 
@@ -408,6 +438,10 @@ function _createSelectWithOptgroups() {
     {
       optgroupName: 'dogs   ',
       optgroupItems: ['Spyke', 'Bethoween', 'Scooby-Do', 'Bascerweil']
+    },
+    {
+      optgroupName: 'apes',
+      optgroupItems: ['Gorilla', 'Bonobo', 'HomoSapiens', 'Proconsule']
     }
 
   ];

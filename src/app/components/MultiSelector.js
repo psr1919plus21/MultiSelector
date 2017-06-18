@@ -25,11 +25,12 @@ export default class MultiSelector extends Component {
       selectAllToggle: false,
       clearAll: false,
       clearAllText: 'Clear all',
-      optgroupsToggle: true
+      optgroupsToggle: true,
+      optgroupsSeparator: ', '
 
     }
 
-    this.settings = Object.assign(settingsDefault, this.settings);
+    this.settings = Object.assign({}, settingsDefault, this.settings);
 
     this.el.style.display = 'none';
     this.multiple = this.el.getAttribute('multiple') !== null;
@@ -90,34 +91,7 @@ export default class MultiSelector extends Component {
 
     // Create optgroups.
     if (this.ui.msOptgroup.length) {
-      this.msOptgroupItems = {};
-
-      this.ui.msOptgroup.forEach((optgroup) => {
-        let normalizedOptgroupLabel = optgroup.getAttribute('label')
-          .trim()
-          .toLowerCase();
-
-        let msOptgroupWrapper = document.createElement('li');
-        msOptgroupWrapper.classList.add('ms-optgroup-wrapper');
-
-        let msOptgroupTitle = document.createElement('div');
-        msOptgroupTitle.classList.add('ms-optgroup');
-        let optgroupTextNode = document.createTextNode(normalizedOptgroupLabel);
-        msOptgroupTitle.appendChild(optgroupTextNode);
-        msOptgroupTitle.setAttribute('data-optgroup', normalizedOptgroupLabel);
-        msOptgroupWrapper.appendChild(msOptgroupTitle);
-
-        this.msOptgroupItems[normalizedOptgroupLabel] = new Array();
-
-        optgroup.querySelectorAll('option').forEach((option) => {
-          let optgroupItem = this._createOption(option, 'div', {optgroup: normalizedOptgroupLabel});
-          msOptgroupWrapper.appendChild(optgroupItem);
-          this.msOptgroupItems[normalizedOptgroupLabel].push(optgroupItem);
-        });
-
-        this.msDropDown.appendChild(msOptgroupWrapper);
-      });
-      this.msOptgroups = this.msDropDown.querySelectorAll('.ms-optgroup');
+      this._createOptgroups();
 
     } else {
       // Add select options
@@ -192,6 +166,37 @@ export default class MultiSelector extends Component {
     this.msSelector.classList.toggle('ms-wrapper_active');
   }
 
+  _createOptgroups() {
+    this.msOptgroupItems = {};
+
+    this.ui.msOptgroup.forEach((optgroup) => {
+      let normalizedOptgroupLabel = optgroup.getAttribute('label')
+        .trim()
+        .toLowerCase();
+
+      let msOptgroupWrapper = document.createElement('li');
+      msOptgroupWrapper.classList.add('ms-optgroup-wrapper');
+
+      let msOptgroupTitle = document.createElement('div');
+      msOptgroupTitle.classList.add('ms-optgroup');
+      let optgroupTextNode = document.createTextNode(normalizedOptgroupLabel);
+      msOptgroupTitle.appendChild(optgroupTextNode);
+      msOptgroupTitle.setAttribute('data-optgroup', normalizedOptgroupLabel);
+      msOptgroupWrapper.appendChild(msOptgroupTitle);
+
+      this.msOptgroupItems[normalizedOptgroupLabel] = new Array();
+
+      optgroup.querySelectorAll('option').forEach((option) => {
+        let optgroupItem = this._createOption(option, 'div', {optgroup: normalizedOptgroupLabel});
+        msOptgroupWrapper.appendChild(optgroupItem);
+        this.msOptgroupItems[normalizedOptgroupLabel].push(optgroupItem);
+      });
+
+      this.msDropDown.appendChild(msOptgroupWrapper);
+    });
+    this.msOptgroups = this.msDropDown.querySelectorAll('.ms-optgroup');
+  }
+
   _createOption(option, tagName='li', dataAttributes) {
     let msItem = document.createElement(tagName);
     msItem.classList.add('ms-dropdown__item');
@@ -226,6 +231,7 @@ export default class MultiSelector extends Component {
   }
 
   _selectOptgroupItems(currentOptgroupTitle) {
+    let titleText = '';
     this.msItems.forEach((item) => {
       if (item.getAttribute('data-optgroup') === currentOptgroupTitle) {
         item.classList.add('ms-dropdown__item_active');
@@ -233,7 +239,20 @@ export default class MultiSelector extends Component {
         this._setNativeMultipleOptions(selectedValue);
       }
     });
-    this.msTitleText.textContent = currentOptgroupTitle;
+
+    if (this.isAllSelected()) {
+      titleText = this.settings.allSelectedPlaceholder;
+    } else {
+      let optgroupsActive = Array.from(this.msDropDown.querySelectorAll('.ms-optgroup_active'));
+      titleText += optgroupsActive.shift().textContent;
+      optgroupsActive.forEach((optgroup) => {
+        titleText += this.settings.optgroupsSeparator + optgroup.textContent
+      });
+
+    }
+
+
+    this.msTitleText.textContent = titleText;
   }
 
   _unselectOptgroupItems(currentOptgroupTitle) {
