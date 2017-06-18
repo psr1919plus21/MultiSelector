@@ -6,13 +6,15 @@ let plainSelect;
 let placeholderSelect;
 let multipleSelect;
 let multipleSelectNoPlaceholder;
+let multipleSelectWithOptgroups;
 
 beforeEach(function() {
   global.document = jsdom();
   _createPlainSelect();
   _createSelectWithPlaceholder();
   _createSelectMultiple();
-  _createSelectMultipleNoPlaceholder()
+  _createSelectMultipleNoPlaceholder();
+  _createSelectWithOptgroups();
 
 });
 
@@ -220,7 +222,7 @@ describe('MultiSelector', function() {
     let selectAllBtn = selectorInstance.msSelectAll;
     selectAllBtn.click();
     selectAllBtn.click();
-    let expected = selectorInstance.msItems[0].textContent;
+    let expected = 'Select all';
     let actual = selectorInstance.msTitleText.textContent;
     expect(expected).to.equal(actual);
   })
@@ -256,6 +258,56 @@ describe('MultiSelector', function() {
     firstOption.click();
     let expected = 'all';
     let actual = selectAllBtn.textContent;
+    expect(expected).to.equal(actual);
+  })
+
+  it('shoud exist select with optgroups in DOM.', function() {
+    let optgroup = multipleSelectWithOptgroups.querySelectorAll('optgroup')[0].tagName;
+    let expected = 'OPTGROUP';
+    let actual = optgroup;
+    expect(expected).to.equal(actual);
+  })
+
+  it('shoud exist optgroups in MultiSelector.', function() {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectWithOptgroups
+    });
+    let msOptgroup = selectorInstance.msOptgroups[0];
+
+
+    let expected = msOptgroup.classList.contains('ms-optgroup');
+    let actual = true;
+    expect(expected).to.equal(actual);
+  })
+
+  it('shoud select all optgroups items by click on optgroup title', function() {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectWithOptgroups
+    });
+    let msOptgroup = selectorInstance.msOptgroups[0];
+    let msOptgroupLabel = msOptgroup.textContent;
+    let currentGroupItems = selectorInstance.msOptgroupItems[msOptgroupLabel];
+    msOptgroup.click();
+    let expected = true;
+    let actual = currentGroupItems.every((item) => {
+      return item.classList.contains('ms-dropdown__item_active');
+    });
+    expect(expected).to.equal(actual);
+  })
+
+  it('shoud unselect all optgroups items by secondary click on optgroup title', function() {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectWithOptgroups
+    });
+    let msOptgroup = selectorInstance.msOptgroups[0];
+    let msOptgroupLabel = msOptgroup.textContent;
+    let currentGroupItems = selectorInstance.msOptgroupItems[msOptgroupLabel];
+    msOptgroup.click();
+    msOptgroup.click();
+    let expected = false;
+    let actual = currentGroupItems.every((item) => {
+      return item.classList.contains('ms-dropdown__item_active');
+    });
     expect(expected).to.equal(actual);
   })
 
@@ -346,6 +398,73 @@ function _createSelectMultipleNoPlaceholder() {
 
   selectWrapper.appendChild(multipleSelectNoPlaceholder);
 }
+
+function _createSelectWithOptgroups() {
+  let selectData = [
+    {
+      optgroupName: ' cAts',
+      optgroupItems: ['Tom', 'Sylvester', 'Felix', 'Garfield']
+    },
+    {
+      optgroupName: 'dogs   ',
+      optgroupItems: ['Spyke', 'Bethoween', 'Scooby-Do', 'Bascerweil']
+    }
+
+  ];
+
+  let selectWrapper = document.createElement('div');
+  multipleSelectWithOptgroups = document.createElement('select');
+  multipleSelectWithOptgroups.setAttribute('multiple', true);
+
+  selectData.forEach((item, index) => {
+    let optgroup = document.createElement('optgroup');
+    optgroup.setAttribute('label', item.optgroupName);
+
+    item.optgroupItems.forEach((optgroupItem) => {
+      let normalizedItem = optgroupItem.trim().toLowerCase();
+      let option = document.createElement('option');
+      let optionText = document.createTextNode(optgroupItem);
+      option.setAttribute('value', normalizedItem);
+      option.appendChild(optionText);
+      optgroup.appendChild(option);
+    });
+
+    multipleSelectWithOptgroups.appendChild(optgroup);
+  })
+
+  selectWrapper.appendChild(multipleSelectWithOptgroups);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
