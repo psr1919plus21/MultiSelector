@@ -52,25 +52,30 @@ Settings
 Here an example of initialisation *MultiSelector* with settings.
 
     new MultiSelector({
-      el: document.querySelector('.ms-select-custom-icon'),
+      el: document.querySelector('.your-selector-class-or-id'),
       settings: {
-        titleIconClose: 'src/img/bomb.svg',
-        titleIconOpen: 'src/img/explosion.svg',
-        dropdownNoFlow: true,
-        keepOpenByAreaClick: true,
-        dropdownUp: true,
-        selectedSeparator: 'from',
-        allSelectedPlaceholder: 'you select all cats',
+        allSelectedPlaceholder: 'All selected',
+        selectedSeparator: 'of',
+        dropdownNoFlow: false,
+        keepOpenByAreaClick: false,
+        dropdownUp: false,
         selectAll: false,
         selectAllText: 'Select all',
         unselectAllText: 'Unselect all',
-        selectAllToggle: false
+        selectAllToggle: false,
+        clearAll: false,
+        clearAllText: 'Clear all',
+        optgroupsToggle: true,
+        optgroupsSeparator: ', '
+
+        titleIconClose: 'src/img/bomb.svg',
+        titleIconOpen: 'src/img/explosion.svg' 
       }
     });
 
- **titleIconClose** – *URL string*, define custom icon for closed *MultiSelector*
+ **allSelectedPlaceholder** – String that appears if all values will be selected.
 
- **titleIconOpen** - *URL string*, define custom icon for open *MultiSelector*
+ **selectedSeparator** – String that separate count of selected and total values, by default – 'of'.
 
  **dropdownNoFlow** - If true places dropdown over content, if false content bellow will be offset on dropdown height.
 
@@ -78,17 +83,27 @@ Here an example of initialisation *MultiSelector* with settings.
 
  **dropdownUp** – If true dropdown will be expanded up to select title, if false it will be droped down in default style. False by default.
 
- **selectedSeparator** – String that separate count of selected and total values, by default – 'of'.
-
- **allSelectedPlaceholder** – String that appears if all values will be selected.
-
  **selectAll** – This option include select all button before all your select items.
- 
+
  **selectAllText** – This string define select all button text.
- 
+
  **unselectAllText** – This string define unselect all button text.
 
  **selectAllToggle** – If pressing select all button again all items will be unselected.
+
+ **clearAll** – This option include clear all button on the top of dropdown.
+
+ **clearAllText** – This option define clear all button text.
+ 
+ **optgroupsToggle** – This option define toggling optgroups.
+ 
+ **optgroupsSeparator** – This option define separator sign between selected optgroups.
+
+ **titleIconClose** – *URL string*, define custom icon for closed *MultiSelector*
+
+ **titleIconOpen** - *URL string*, define custom icon for open *MultiSelector*
+
+ 
 
 
 
@@ -116,12 +131,44 @@ In order to initialise you select with a multiple attribute you need to just add
 
 After this native select will be hidden and *MultiSelector* will be inserted right before native select element.
 
+
+Selector with `optgroups`.
+---------
+*MultiSelector* allow you to create selects with items divided by optgroups. In order to initialise you select with optgroups you need to just add optgroups to you select element, *MultiSelector* will do whole work underhood.
+
+**Example:**
+
+    <select class="ms-select-optgroups" multiple>
+      <option  value="" disabled selected>Select your pet</option>
+      <optgroup label="Cats">
+          <option value="Tom">Tom</option>
+          <option value="garfield">Garfield</option>
+          <option value="Sylvester">Sylvester</option>
+          <option value="Jasper">Jasper</option>
+      </optgroup>
+
+      <optgroup label="dogs">
+        <option value="spyke">Spyke</option>
+        <option value="bethooween">Bethooween</option>
+        <option value="rex">Rex</option>
+        <option value="barboss">Barboss</option>
+      </optgroup>
+
+      <optgroup label="apes">
+        <option value="bonobo">Bonobo</option>
+      </optgroup>
+    </select>
+
+After this native select will be hidden and *MultiSelector* will be inserted right before native select element.
+
 Methods
 ---------
 
 *MultiSelector* instance has the following methods:
 
 `getValue` – return an array with selected items.
+
+`getValueAsString` – return selected items as string.
 
 `isAllSelected` – return true if all items selected.
 
