@@ -230,6 +230,22 @@ export default class MultiSelector extends Component {
     }
   }
 
+  _getSelectedOptgroupsString() {
+    let _titleText = '';
+    let optgroupsActive = Array.from(this.msDropDown.querySelectorAll('.ms-optgroup_active'));
+    if (!optgroupsActive.length) {
+        // TODO: если ни одна из групп не выбрана, то вычислять тайтл методом
+        // для items 
+        return;
+    }
+
+    _titleText += optgroupsActive.shift().textContent;
+    optgroupsActive.forEach((optgroup) => {
+      _titleText += this.settings.optgroupsSeparator + optgroup.textContent
+    });
+    return _titleText;
+  }
+
   _selectOptgroupItems(currentOptgroupTitle) {
     let titleText = '';
     this.msItems.forEach((item) => {
@@ -243,14 +259,9 @@ export default class MultiSelector extends Component {
     if (this.isAllSelected()) {
       titleText = this.settings.allSelectedPlaceholder;
     } else {
-      let optgroupsActive = Array.from(this.msDropDown.querySelectorAll('.ms-optgroup_active'));
-      titleText += optgroupsActive.shift().textContent;
-      optgroupsActive.forEach((optgroup) => {
-        titleText += this.settings.optgroupsSeparator + optgroup.textContent
-      });
+      titleText = this._getSelectedOptgroupsString();
 
     }
-
 
     this.msTitleText.textContent = titleText;
   }
@@ -263,7 +274,7 @@ export default class MultiSelector extends Component {
         this._removeNativeMultipleOptions(unselectValue);
       }
     });
-    this.msTitleText.textContent = currentOptgroupTitle;
+    this.msTitleText.textContent = this._getSelectedOptgroupsString();
   }
 
   // Maybe later this func will be public for programmatically selection particular items.
@@ -464,24 +475,3 @@ export default class MultiSelector extends Component {
   }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
