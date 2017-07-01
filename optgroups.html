@@ -54,6 +54,9 @@
 <script>
   let optgroupsMultiselector = new MultiSelector({
     el: document.querySelector('.ms-select-optgroups'),
+    settings: {
+      placeholderText: 'Pets here'
+    }
   });
   console.log(optgroupsMultiselector.msItems);
   console.log(optgroupsMultiselector.msOptgroupItems);
@@ -62,19 +65,3 @@
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

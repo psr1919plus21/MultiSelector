@@ -224,7 +224,7 @@ describe('MultiSelector', function() {
     let selectAllBtn = selectorInstance.msSelectAll;
     selectAllBtn.click();
     selectAllBtn.click();
-    let expected = 'Select all';
+    let expected = selectorInstance.settings.placeholderText;
     let actual = selectorInstance.msTitleText.textContent;
     expect(expected).to.equal(actual);
   })
@@ -357,6 +357,20 @@ describe('MultiSelector', function() {
     expect(expected).to.equal(actual);
   });
 
+  it('should show default title when optgroup unselected', () => {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectWithOptgroups
+    });
+
+    let msOptgroups = selectorInstance.msOptgroups;
+    msOptgroups[0].click();
+    msOptgroups[0].click();
+
+    let expected = selectorInstance.settings.placeholderText;
+    let actual = selectorInstance.msTitleText.innerHTML;
+    expect(expected).to.equal(actual);
+
+  });
 
 });
 

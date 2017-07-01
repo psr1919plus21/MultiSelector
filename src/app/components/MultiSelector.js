@@ -21,6 +21,7 @@ export default class MultiSelector extends Component {
       dropdownUp: false,
       selectAll: false,
       selectAllText: 'Select all',
+      placeholderText: 'It\'s time to choose',
       unselectAllText: 'Unselect all',
       selectAllToggle: false,
       clearAll: false,
@@ -50,7 +51,7 @@ export default class MultiSelector extends Component {
 
     // MultiSelector placeholder.
     if (!this.ui.msPlaceholder.length) {
-      this.ui.msPlaceholder = [{text: this.settings.selectAllText}];
+      this.ui.msPlaceholder = [{text: this.settings.placeholderText}];
     }
     this.msTitleTextNode = document.createTextNode(this.ui.msPlaceholder[0].text);
 
@@ -123,8 +124,6 @@ export default class MultiSelector extends Component {
         optgroup.addEventListener('click', this._selectOptgroup.bind(this));
       });
     }
-
-
   }
 
   getValue() {
@@ -234,9 +233,8 @@ export default class MultiSelector extends Component {
     let _titleText = '';
     let optgroupsActive = Array.from(this.msDropDown.querySelectorAll('.ms-optgroup_active'));
     if (!optgroupsActive.length) {
-        // TODO: если ни одна из групп не выбрана, то вычислять тайтл методом
-        // для items 
-        return;
+        _titleText = this._setSelectedItems();
+        return _titleText;
     }
 
     _titleText += optgroupsActive.shift().textContent;
@@ -285,25 +283,7 @@ export default class MultiSelector extends Component {
     if (this.multiple) {
       e.target.classList.toggle('ms-dropdown__item_active');
 
-      let selectedItems = Array.from(this.msDropDown.querySelectorAll('.ms-dropdown__item_active'));
-      let selectedItemsLength = selectedItems.length;
-      let allItemsLength = this.el.items.length;
-      this._clearNativeMultipleOptions();
-
-      selectedItems.forEach((item) => {
-        let selectedValue = item.getAttribute('data-value');
-        this._setNativeMultipleOptions(selectedValue);
-      });
-
-      if (!selectedItemsLength) {
-        this.msTitleText.textContent = this.ui.msPlaceholder[0].text
-      }  else if (selectedItemsLength === 1) {
-        this.msTitleText.textContent = selectedItems[0].innerHTML;
-      } else if (selectedItemsLength < allItemsLength) {
-         this.msTitleText.textContent = `${selectedItemsLength} ${this.settings.selectedSeparator} ${allItemsLength}`;
-      } else {
-        this.msTitleText.textContent = this.settings.allSelectedPlaceholder;
-      }
+      this.msTitleText.textContent = this._setSelectedItems();
 
       if (this.settings.selectAll) {
         if (this.isAllSelected()) {
@@ -324,6 +304,31 @@ export default class MultiSelector extends Component {
         this.el.value = dataValue;
       }, 300);
     }
+  }
+
+  _setSelectedItems() {
+    let selectedItems = Array.from(this.msDropDown.querySelectorAll('.ms-dropdown__item_active'));
+    let selectedItemsLength = selectedItems.length;
+    let allItemsLength = this.el.items.length;
+    let _msTitleText = '';
+    this._clearNativeMultipleOptions();
+
+    selectedItems.forEach((item) => {
+      let selectedValue = item.getAttribute('data-value');
+      this._setNativeMultipleOptions(selectedValue);
+    });
+
+    if (!selectedItemsLength) {
+       _msTitleText = this.ui.msPlaceholder[0].text
+    }  else if (selectedItemsLength === 1) {
+      _msTitleText = selectedItems[0].innerHTML;
+    } else if (selectedItemsLength < allItemsLength) {
+       _msTitleText = `${selectedItemsLength} ${this.settings.selectedSeparator} ${allItemsLength}`;
+    } else {
+      _msTitleText = this.settings.allSelectedPlaceholder;
+    }
+
+    return _msTitleText;
   }
 
   // Maybe later this func will be public for programmatically select all.
