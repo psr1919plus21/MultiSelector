@@ -224,7 +224,7 @@ describe('MultiSelector', function() {
     let selectAllBtn = selectorInstance.msSelectAll;
     selectAllBtn.click();
     selectAllBtn.click();
-    let expected = 'Select all';
+    let expected = selectorInstance.settings.placeholderText;
     let actual = selectorInstance.msTitleText.textContent;
     expect(expected).to.equal(actual);
   })
@@ -341,6 +341,36 @@ describe('MultiSelector', function() {
     expect(expected).to.equal(actual);
   });
 
+  it('shoud set separate optgroups to selector title when unselect one of it', () => {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectWithOptgroups,
+    });
+    let msOptgroups = selectorInstance.msOptgroups;
+    // msOptgroups.forEach((optgroup) => optgroup.click());
+    msOptgroups[0].click();
+    msOptgroups[1].click();
+    msOptgroups[2].click();
+    msOptgroups[2].click();
+
+    let expected = msOptgroups[0].textContent + ', ' + msOptgroups[1].textContent
+    let actual = selectorInstance.msTitle.textContent;
+    expect(expected).to.equal(actual);
+  });
+
+  it('should show default title when optgroup unselected', () => {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectWithOptgroups
+    });
+
+    let msOptgroups = selectorInstance.msOptgroups;
+    msOptgroups[0].click();
+    msOptgroups[0].click();
+
+    let expected = selectorInstance.settings.placeholderText;
+    let actual = selectorInstance.msTitleText.innerHTML;
+    expect(expected).to.equal(actual);
+
+  });
 
 });
 
@@ -468,41 +498,3 @@ function _createSelectWithOptgroups() {
 
   selectWrapper.appendChild(multipleSelectWithOptgroups);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
