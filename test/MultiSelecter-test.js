@@ -372,6 +372,21 @@ describe('MultiSelector', function() {
 
   });
 
+  it('should select group if all group items are selected', () => {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectWithOptgroups
+    });
+
+    let cats = selectorInstance.msOptgroupItems.cats;
+    cats.forEach((cat) => {
+      cat.click();
+    });
+
+    let expected = true;
+    let actual = selectorInstance.msOptgroups[0].classList.contains('ms-optgroup_active');
+    expect(expected).to.equal(actual);
+  });
+
 });
 
 function _createPlainSelect() {
