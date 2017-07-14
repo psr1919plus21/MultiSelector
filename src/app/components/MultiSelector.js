@@ -258,7 +258,6 @@ export default class MultiSelector extends Component {
       titleText = this.settings.allSelectedPlaceholder;
     } else {
       titleText = this._getSelectedOptgroupsString();
-
     }
 
     this.msTitleText.textContent = titleText;
@@ -282,9 +281,9 @@ export default class MultiSelector extends Component {
 
     if (this.multiple) {
       e.target.classList.toggle('ms-dropdown__item_active');
-
       this.msTitleText.textContent = this._setSelectedItems();
 
+      // Set selectAll button active if all selected.
       if (this.settings.selectAll) {
         if (this.isAllSelected()) {
           this.msSelectAll.classList.add('ms-dropdown__select-all_active');
@@ -294,6 +293,10 @@ export default class MultiSelector extends Component {
           this.msSelectAll.textContent = this.settings.selectAllText;
         }
       }
+
+      // Check if any optgroup selected and set it active or deselect
+      this._checkOptgroupsForSelection();
+
 
     } else {
       this._toggleSelector.call(this);
@@ -305,6 +308,40 @@ export default class MultiSelector extends Component {
       }, 300);
     }
   }
+
+  _checkOptgroupsForSelection() {
+    let titleText;
+
+    if (this.ui.msOptgroup.length) {
+      // Clear optgroups titles
+      this.msOptgroups.forEach((optgroupTitle) => {
+        optgroupTitle.classList.remove('ms-optgroup_active');
+      })
+
+      for (let optgroup in this.msOptgroupItems) {
+        let isSelected = this.msOptgroupItems[optgroup].every((optgroupItem) => {
+          return optgroupItem.classList.contains('ms-dropdown__item_active');
+        });
+
+        if (isSelected) {
+          this.msOptgroups.forEach((optgroupTitle) => {
+            if (optgroupTitle.textContent === optgroup) {
+              optgroupTitle.classList.add('ms-optgroup_active');
+            }
+          })
+        }
+
+        if (this.isAllSelected()) {
+          titleText = this.settings.allSelectedPlaceholder;
+        } else {
+          titleText = this._getSelectedOptgroupsString();
+        }
+
+        this.msTitleText.textContent = titleText;
+      }
+    }
+  }
+
 
   _setSelectedItems() {
     let selectedItems = Array.from(this.msDropDown.querySelectorAll('.ms-dropdown__item_active'));
