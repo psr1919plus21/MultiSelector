@@ -318,7 +318,9 @@ export default class MultiSelector extends Component {
         optgroupTitle.classList.remove('ms-optgroup_active');
       })
 
+      let additionalItemsCount = 0;
       for (let optgroup in this.msOptgroupItems) {
+        let itemsInOptgroup;
         let isSelected = this.msOptgroupItems[optgroup].every((optgroupItem) => {
           return optgroupItem.classList.contains('ms-dropdown__item_active');
         });
@@ -329,16 +331,26 @@ export default class MultiSelector extends Component {
               optgroupTitle.classList.add('ms-optgroup_active');
             }
           })
+        } else {
+          itemsInOptgroup = this.msOptgroupItems[optgroup].filter((optgroupItem) => {
+            return optgroupItem.classList.contains('ms-dropdown__item_active');
+          });
+          additionalItemsCount += itemsInOptgroup.length;
         }
+      }
 
+      let activeGroups = Array.from(this.msDropDown.querySelectorAll('.ms-optgroup_active'));
+      if (activeGroups.length) {
         if (this.isAllSelected()) {
           titleText = this.settings.allSelectedPlaceholder;
+        } else if (additionalItemsCount) {
+          titleText = this._getSelectedOptgroupsString() + ` and ${additionalItemsCount} more`;
         } else {
           titleText = this._getSelectedOptgroupsString();
         }
-
         this.msTitleText.textContent = titleText;
       }
+
     }
   }
 
