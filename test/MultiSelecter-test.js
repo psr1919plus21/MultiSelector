@@ -387,6 +387,23 @@ describe('MultiSelector', function() {
     expect(expected).to.equal(actual);
   });
 
+  it('should add item to title contains selected group', () => {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectWithOptgroups
+    });
+
+    let cats = selectorInstance.msOptgroupItems.cats;
+    let dogs = selectorInstance.msOptgroupItems.dogs;
+    cats.forEach((cat) => {
+      cat.click();
+    });
+    dogs[0].click();
+
+    let expected = 'cats and 1 more';
+    let actual = selectorInstance.msTitle.textContent;
+    expect(expected).to.equal(actual);
+  });
+
 });
 
 function _createPlainSelect() {
