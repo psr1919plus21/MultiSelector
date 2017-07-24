@@ -213,6 +213,27 @@ describe('MultiSelector', function() {
     expect(expected).to.equal(actual);
   })
 
+  it('should keep placeholder static after select all by items if no toggle', function() {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelect,
+      settings: {
+        selectAll: true,
+        selectAllToggle: false,
+        selectAllText: 'Select all'
+      }
+    });
+
+    let selectAllBtn = selectorInstance.msSelectAll;
+    let selectItems = selectorInstance.msItems;
+    selectItems.forEach((item) => {
+      item.click();
+    });
+
+    let expected = 'Select all';
+    let actual = selectAllBtn.textContent;
+    expect(expected).to.equal(actual);
+  })
+
   it('shoud set placeholder to title after select all unselect (no placeholder select).', function() {
     let selectorInstance = new MultiSelector({
       el: multipleSelectNoPlaceholder,
