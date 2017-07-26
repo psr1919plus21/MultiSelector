@@ -125,6 +125,10 @@ export default class MultiSelector extends Component {
         optgroup.addEventListener('click', this._selectOptgroup.bind(this));
       });
     }
+
+    if (typeof this.settings.onReady === 'function') {
+      this.settings.onReady.apply(this.settings.onReady.arguments);
+    }
   }
 
   getValue() {
