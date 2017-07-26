@@ -34,6 +34,7 @@ export default class MultiSelector extends Component {
     this.settings = Object.assign({}, settingsDefault, this.settings);
 
     this.el.style.display = 'none';
+    this.el.classList.remove('ms-loading');
     this.multiple = this.el.getAttribute('multiple') !== null;
     this.el.items =  this._getCleanOptions();
 

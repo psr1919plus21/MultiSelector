@@ -425,12 +425,23 @@ describe('MultiSelector', function() {
     expect(expected).to.equal(actual);
   });
 
+  it('should remove ms-loading class', () => {
+    let selectorInstance = new MultiSelector({
+      el: plainSelect
+    });
+
+    let expected = false;
+    let actual = selectorInstance.el.classList.contains('ms-loading');
+    expect(expected).to.equal(actual);
+  });
+
 });
 
 function _createPlainSelect() {
   let selectData = ['Leonardo', 'Donatello', 'Michelangelo', 'Raphael'];
   let selectWrapper = document.createElement('div');
   plainSelect = document.createElement('select');
+  plainSelect.classList.add('ms-loading');
 
   selectData.forEach((item) => {
     let normalizedItem = item.trim().toLowerCase();
