@@ -94,7 +94,10 @@ Here an example of initialisation *MultiSelector* with settings.
         clearAll: false,
         clearAllText: 'Clear all',
         optgroupsToggle: true,
-        optgroupsSeparator: ', '
+        optgroupsSeparator: ', ',
+        onReady: function() {
+          console.log('ready');
+        }
 
         titleIconClose: 'src/img/bomb.svg',
         titleIconOpen: 'src/img/explosion.svg'
@@ -130,6 +133,8 @@ Here an example of initialisation *MultiSelector* with settings.
  **titleIconClose** – *URL string*, define custom icon for closed *MultiSelector*
 
  **titleIconOpen** - *URL string*, define custom icon for open *MultiSelector*
+
+ **onReady** – Callback function that be called after *MultiSelector* replace native selector.
 
 
 
