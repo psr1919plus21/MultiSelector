@@ -1,6 +1,6 @@
 MultiSelector
 =====
-This is pure-js plugin that allow you turn an awful native selects to total customisable user friendly elements in few simple steps. 
+This is pure-js plugin that allow you turn an awful native selects to total customisable user friendly elements in few simple steps.
 
 Get MultiSelector
 ----------
@@ -33,7 +33,7 @@ In order to initialise you select with *MultiSelector*  you need to grab it by s
        <option value="michelangelo">Michelangelo</option>
        <option value="raphael">Raphael</option>
      </select>
-     
+
      <script>
        new MultiSelector({
          el: document.querySelector('.example-classname')
@@ -42,10 +42,38 @@ In order to initialise you select with *MultiSelector*  you need to grab it by s
 
 After this native select will be hidden and *MultiSelector* will be inserted right before native select element.
 
-***MultiSelector*'s constructor take two arguments**: 
+***MultiSelector*'s constructor take two arguments**:
 
  1. element selector.
  2. object **settings** (optional).
+
+You can add `ms-loading` class for your native selector element for specify apperance for it while *MultiSelector* loading. It keep apperance clear while page loading.
+Styles for preload native select state can look like this:
+
+      .ms-loading {
+        min-height: 40px;
+        background: rgba(255,255,255,0);
+        border: 2px solid #444;
+        border-top-color: #999;
+        border-right-color: #999;
+        width: 40px;
+        display: block;
+        font-size: 0;
+        border-radius: 50%;
+        -webkit-appearance: none;
+        box-shadow: none;
+        animation: spin 2s linear infinite;
+        margin: 0 auto;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
 
 Settings
 -------
@@ -69,7 +97,7 @@ Here an example of initialisation *MultiSelector* with settings.
         optgroupsSeparator: ', '
 
         titleIconClose: 'src/img/bomb.svg',
-        titleIconOpen: 'src/img/explosion.svg' 
+        titleIconOpen: 'src/img/explosion.svg'
       }
     });
 
@@ -94,16 +122,16 @@ Here an example of initialisation *MultiSelector* with settings.
  **clearAll** – This option include clear all button on the top of dropdown.
 
  **clearAllText** – This option define clear all button text.
- 
+
  **optgroupsToggle** – This option define toggling optgroups.
- 
+
  **optgroupsSeparator** – This option define separator sign between selected optgroups.
 
  **titleIconClose** – *URL string*, define custom icon for closed *MultiSelector*
 
  **titleIconOpen** - *URL string*, define custom icon for open *MultiSelector*
 
- 
+
 
 
 
@@ -122,7 +150,7 @@ In order to initialise you select with a multiple attribute you need to just add
        <option value="michelangelo">Michelangelo</option>
        <option value="raphael">Raphael</option>
      </select>
-     
+
      <script>
        new MultiSelector({
          el: document.querySelector('.example-classname')
