@@ -383,12 +383,23 @@ export default class MultiSelector extends Component {
     return _msTitleText;
   }
 
+  _clickEveryOptgroup() {
+      this.msOptgroups.forEach((optgroup) => {
+        optgroup.click();
+      });
+  }
+
   // Maybe later this func will be public for programmatically select all.
   _selectAll() {
     if (this.msSelectAll.classList.contains('ms-dropdown__select-all_active')) {
 
       if (this.settings.selectAllToggle) {
         this.msSelectAll.classList.remove('ms-dropdown__select-all_active');
+
+        if (this.msOptgroups && this.settings.optgroupsToggle) {
+          this._clickEveryOptgroup();
+        }
+
         this.msSelectAll.textContent = this.settings.selectAllText;
         this._clearNativeMultipleOptions();
         this.msItems.forEach((item) => {
@@ -404,6 +415,11 @@ export default class MultiSelector extends Component {
     }
 
     this.msSelectAll.classList.add('ms-dropdown__select-all_active');
+
+    if (this.msOptgroups) {
+      this._clickEveryOptgroup();
+    }
+
     this._clearNativeMultipleOptions();
     this.msItems.forEach((item) => {
       item.classList.add('ms-dropdown__item_active');

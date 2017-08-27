@@ -55,7 +55,9 @@
   let optgroupsMultiselector = new MultiSelector({
     el: document.querySelector('.ms-select-optgroups'),
     settings: {
-      placeholderText: 'Pets here'
+      placeholderText: 'Pets here',
+      selectAll: true,
+      selectAllToggle: true
     }
   });
   console.log(optgroupsMultiselector.msItems);

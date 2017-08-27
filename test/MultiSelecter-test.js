@@ -425,6 +425,44 @@ describe('MultiSelector', function() {
     expect(expected).to.equal(actual);
   });
 
+  it('should select all groups by selectAll btn', () => {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectWithOptgroups,
+      settings: {
+        selectAll: true
+      }
+    });
+
+    let selectAllBtn = selectorInstance.msSelectAll;
+    selectAllBtn.click();
+
+    let expected = true;
+    let actual = Array.from(selectorInstance.msOptgroups).every((optgroup) => {
+      return optgroup.classList.contains('ms-optgroup_active');
+    });
+    expect(expected).to.equal(actual);
+  });
+
+  it('should unselect all groups by selectAll btn double click', () => {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectWithOptgroups,
+      settings: {
+        selectAll: true,
+        selectAllToggle: true
+      }
+    });
+
+    let selectAllBtn = selectorInstance.msSelectAll;
+    selectAllBtn.click();
+    selectAllBtn.click();
+
+    let expected = true;
+    let actual = Array.from(selectorInstance.msOptgroups).every((optgroup) => {
+      return !optgroup.classList.contains('ms-optgroup_active');
+    });
+    expect(expected).to.equal(actual);
+  });
+
   it('should remove ms-loading class', () => {
     let selectorInstance = new MultiSelector({
       el: plainSelect
