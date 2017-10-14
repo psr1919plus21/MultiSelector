@@ -463,6 +463,25 @@ describe('MultiSelector', function() {
     expect(expected).to.equal(actual);
   });
 
+  it('should unselect selectAll button by unselect optgroup', () => {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectWithOptgroups,
+      settings: {
+        selectAll: true,
+        selectAllToggle: true
+      }
+    });
+
+    let selectAllBtn = selectorInstance.msSelectAll;
+    let optgroup = selectorInstance.msOptgroups[0];
+    selectAllBtn.click();
+    optgroup.click();
+
+    let expected = false;
+    let actual = selectAllBtn.classList.contains('ms-dropdown__select-all_active');
+    expect(expected).to.equal(actual);
+  });
+
   it('should remove ms-loading class', () => {
     let selectorInstance = new MultiSelector({
       el: plainSelect
