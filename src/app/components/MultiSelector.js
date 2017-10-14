@@ -228,6 +228,18 @@ export default class MultiSelector extends Component {
       currentOptgroup.classList.add('ms-optgroup_active');
       this._selectOptgroupItems(currentOptgroupTitle);
     }
+
+    // Toogle selectAll button state if any.
+    if (this.msSelectAll) {
+      if (this.isAllSelected()) {
+        this.msSelectAll.classList.add('ms-dropdown__select-all_active');
+        this.msSelectAll.textContent = this.settings.unselectAllText;
+
+      } else {
+        this.msSelectAll.classList.remove('ms-dropdown__select-all_active');
+        this.msSelectAll.textContent = this.settings.selectAllText;
+      }
+    }
   }
 
   _getSelectedOptgroupsString() {
