@@ -32,6 +32,10 @@
               <option value="rex">Rex</option>
               <option value="barboss">Barboss</option>
             </optgroup>
+
+            <optgroup label="apes">
+              <option value="spyke">Bonobo</option>
+            </optgroup>
           </select>
         </div>
 
@@ -51,7 +55,9 @@
   let optgroupsMultiselector = new MultiSelector({
     el: document.querySelector('.ms-select-optgroups'),
     settings: {
-      optgroupsToggle: false
+      placeholderText: 'Pets here',
+      selectAll: true,
+      selectAllToggle: true
     }
   });
   console.log(optgroupsMultiselector.msItems);
@@ -61,19 +67,3 @@
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

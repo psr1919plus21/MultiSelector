@@ -21,17 +21,20 @@ export default class MultiSelector extends Component {
       dropdownUp: false,
       selectAll: false,
       selectAllText: 'Select all',
+      placeholderText: 'It\'s time to choose',
       unselectAllText: 'Unselect all',
       selectAllToggle: false,
       clearAll: false,
       clearAllText: 'Clear all',
-      optgroupsToggle: true
+      optgroupsToggle: true,
+      optgroupsSeparator: ', '
 
     }
 
-    this.settings = Object.assign(settingsDefault, this.settings);
+    this.settings = Object.assign({}, settingsDefault, this.settings);
 
     this.el.style.display = 'none';
+    this.el.classList.remove('ms-loading');
     this.multiple = this.el.getAttribute('multiple') !== null;
     this.el.items =  this._getCleanOptions();
 
@@ -49,7 +52,7 @@ export default class MultiSelector extends Component {
 
     // MultiSelector placeholder.
     if (!this.ui.msPlaceholder.length) {
-      this.ui.msPlaceholder = [{text: this.settings.selectAllText}];
+      this.ui.msPlaceholder = [{text: this.settings.placeholderText}];
     }
     this.msTitleTextNode = document.createTextNode(this.ui.msPlaceholder[0].text);
 
@@ -90,34 +93,7 @@ export default class MultiSelector extends Component {
 
     // Create optgroups.
     if (this.ui.msOptgroup.length) {
-      this.msOptgroupItems = {};
-
-      this.ui.msOptgroup.forEach((optgroup) => {
-        let normalizedOptgroupLabel = optgroup.getAttribute('label')
-          .trim()
-          .toLowerCase();
-
-        let msOptgroupWrapper = document.createElement('li');
-        msOptgroupWrapper.classList.add('ms-optgroup-wrapper');
-
-        let msOptgroupTitle = document.createElement('div');
-        msOptgroupTitle.classList.add('ms-optgroup');
-        let optgroupTextNode = document.createTextNode(normalizedOptgroupLabel);
-        msOptgroupTitle.appendChild(optgroupTextNode);
-        msOptgroupTitle.setAttribute('data-optgroup', normalizedOptgroupLabel);
-        msOptgroupWrapper.appendChild(msOptgroupTitle);
-
-        this.msOptgroupItems[normalizedOptgroupLabel] = new Array();
-
-        optgroup.querySelectorAll('option').forEach((option) => {
-          let optgroupItem = this._createOption(option, 'div', {optgroup: normalizedOptgroupLabel});
-          msOptgroupWrapper.appendChild(optgroupItem);
-          this.msOptgroupItems[normalizedOptgroupLabel].push(optgroupItem);
-        });
-
-        this.msDropDown.appendChild(msOptgroupWrapper);
-      });
-      this.msOptgroups = this.msDropDown.querySelectorAll('.ms-optgroup');
+      this._createOptgroups();
 
     } else {
       // Add select options
@@ -149,8 +125,6 @@ export default class MultiSelector extends Component {
         optgroup.addEventListener('click', this._selectOptgroup.bind(this));
       });
     }
-
-
   }
 
   getValue() {
@@ -192,6 +166,37 @@ export default class MultiSelector extends Component {
     this.msSelector.classList.toggle('ms-wrapper_active');
   }
 
+  _createOptgroups() {
+    this.msOptgroupItems = {};
+
+    this.ui.msOptgroup.forEach((optgroup) => {
+      let normalizedOptgroupLabel = optgroup.getAttribute('label')
+        .trim()
+        .toLowerCase();
+
+      let msOptgroupWrapper = document.createElement('li');
+      msOptgroupWrapper.classList.add('ms-optgroup-wrapper');
+
+      let msOptgroupTitle = document.createElement('div');
+      msOptgroupTitle.classList.add('ms-optgroup');
+      let optgroupTextNode = document.createTextNode(normalizedOptgroupLabel);
+      msOptgroupTitle.appendChild(optgroupTextNode);
+      msOptgroupTitle.setAttribute('data-optgroup', normalizedOptgroupLabel);
+      msOptgroupWrapper.appendChild(msOptgroupTitle);
+
+      this.msOptgroupItems[normalizedOptgroupLabel] = new Array();
+
+      optgroup.querySelectorAll('option').forEach((option) => {
+        let optgroupItem = this._createOption(option, 'div', {optgroup: normalizedOptgroupLabel});
+        msOptgroupWrapper.appendChild(optgroupItem);
+        this.msOptgroupItems[normalizedOptgroupLabel].push(optgroupItem);
+      });
+
+      this.msDropDown.appendChild(msOptgroupWrapper);
+    });
+    this.msOptgroups = this.msDropDown.querySelectorAll('.ms-optgroup');
+  }
+
   _createOption(option, tagName='li', dataAttributes) {
     let msItem = document.createElement(tagName);
     msItem.classList.add('ms-dropdown__item');
@@ -223,9 +228,37 @@ export default class MultiSelector extends Component {
       currentOptgroup.classList.add('ms-optgroup_active');
       this._selectOptgroupItems(currentOptgroupTitle);
     }
+
+    // Toogle selectAll button state if any.
+    if (this.msSelectAll) {
+      if (this.isAllSelected()) {
+        this.msSelectAll.classList.add('ms-dropdown__select-all_active');
+        this.msSelectAll.textContent = this.settings.unselectAllText;
+
+      } else {
+        this.msSelectAll.classList.remove('ms-dropdown__select-all_active');
+        this.msSelectAll.textContent = this.settings.selectAllText;
+      }
+    }
+  }
+
+  _getSelectedOptgroupsString() {
+    let _titleText = '';
+    let optgroupsActive = Array.from(this.msDropDown.querySelectorAll('.ms-optgroup_active'));
+    if (!optgroupsActive.length) {
+        _titleText = this._setSelectedItems();
+        return _titleText;
+    }
+
+    _titleText += optgroupsActive.shift().textContent;
+    optgroupsActive.forEach((optgroup) => {
+      _titleText += this.settings.optgroupsSeparator + optgroup.textContent
+    });
+    return _titleText;
   }
 
   _selectOptgroupItems(currentOptgroupTitle) {
+    let titleText = '';
     this.msItems.forEach((item) => {
       if (item.getAttribute('data-optgroup') === currentOptgroupTitle) {
         item.classList.add('ms-dropdown__item_active');
@@ -233,7 +266,14 @@ export default class MultiSelector extends Component {
         this._setNativeMultipleOptions(selectedValue);
       }
     });
-    this.msTitleText.textContent = currentOptgroupTitle;
+
+    if (this.isAllSelected()) {
+      titleText = this.settings.allSelectedPlaceholder;
+    } else {
+      titleText = this._getSelectedOptgroupsString();
+    }
+
+    this.msTitleText.textContent = titleText;
   }
 
   _unselectOptgroupItems(currentOptgroupTitle) {
@@ -244,7 +284,7 @@ export default class MultiSelector extends Component {
         this._removeNativeMultipleOptions(unselectValue);
       }
     });
-    this.msTitleText.textContent = currentOptgroupTitle;
+    this.msTitleText.textContent = this._getSelectedOptgroupsString();
   }
 
   // Maybe later this func will be public for programmatically selection particular items.
@@ -254,36 +294,24 @@ export default class MultiSelector extends Component {
 
     if (this.multiple) {
       e.target.classList.toggle('ms-dropdown__item_active');
+      this.msTitleText.textContent = this._setSelectedItems();
 
-      let selectedItems = Array.from(this.msDropDown.querySelectorAll('.ms-dropdown__item_active'));
-      let selectedItemsLength = selectedItems.length;
-      let allItemsLength = this.el.items.length;
-      this._clearNativeMultipleOptions();
-
-      selectedItems.forEach((item) => {
-        let selectedValue = item.getAttribute('data-value');
-        this._setNativeMultipleOptions(selectedValue);
-      });
-
-      if (!selectedItemsLength) {
-        this.msTitleText.textContent = this.ui.msPlaceholder[0].text
-      }  else if (selectedItemsLength === 1) {
-        this.msTitleText.textContent = selectedItems[0].innerHTML;
-      } else if (selectedItemsLength < allItemsLength) {
-         this.msTitleText.textContent = `${selectedItemsLength} ${this.settings.selectedSeparator} ${allItemsLength}`;
-      } else {
-        this.msTitleText.textContent = this.settings.allSelectedPlaceholder;
-      }
-
+      // Set selectAll button active if all selected.
       if (this.settings.selectAll) {
         if (this.isAllSelected()) {
           this.msSelectAll.classList.add('ms-dropdown__select-all_active');
-          this.msSelectAll.textContent = this.settings.unselectAllText;
+          if (this.settings.selectAllToggle) {
+            this.msSelectAll.textContent = this.settings.unselectAllText;
+          }
         } else {
           this.msSelectAll.classList.remove('ms-dropdown__select-all_active');
           this.msSelectAll.textContent = this.settings.selectAllText;
         }
       }
+
+      // Check if any optgroup selected and set it active or deselect
+      this._checkOptgroupsForSelection();
+
 
     } else {
       this._toggleSelector.call(this);
@@ -296,12 +324,94 @@ export default class MultiSelector extends Component {
     }
   }
 
+  _checkOptgroupsForSelection() {
+    let titleText;
+
+    if (this.ui.msOptgroup.length) {
+      // Clear optgroups titles
+      this.msOptgroups.forEach((optgroupTitle) => {
+        optgroupTitle.classList.remove('ms-optgroup_active');
+      })
+
+      let additionalItemsCount = 0;
+      for (let optgroup in this.msOptgroupItems) {
+        let itemsInOptgroup;
+        let isSelected = this.msOptgroupItems[optgroup].every((optgroupItem) => {
+          return optgroupItem.classList.contains('ms-dropdown__item_active');
+        });
+
+        if (isSelected) {
+          this.msOptgroups.forEach((optgroupTitle) => {
+            if (optgroupTitle.textContent === optgroup) {
+              optgroupTitle.classList.add('ms-optgroup_active');
+            }
+          })
+        } else {
+          itemsInOptgroup = this.msOptgroupItems[optgroup].filter((optgroupItem) => {
+            return optgroupItem.classList.contains('ms-dropdown__item_active');
+          });
+          additionalItemsCount += itemsInOptgroup.length;
+        }
+      }
+
+      let activeGroups = Array.from(this.msDropDown.querySelectorAll('.ms-optgroup_active'));
+      if (activeGroups.length) {
+        if (this.isAllSelected()) {
+          titleText = this.settings.allSelectedPlaceholder;
+        } else if (additionalItemsCount) {
+          titleText = this._getSelectedOptgroupsString() + ` and ${additionalItemsCount} more`;
+        } else {
+          titleText = this._getSelectedOptgroupsString();
+        }
+        this.msTitleText.textContent = titleText;
+      }
+
+    }
+  }
+
+
+  _setSelectedItems() {
+    let selectedItems = Array.from(this.msDropDown.querySelectorAll('.ms-dropdown__item_active'));
+    let selectedItemsLength = selectedItems.length;
+    let allItemsLength = this.el.items.length;
+    let _msTitleText = '';
+    this._clearNativeMultipleOptions();
+
+    selectedItems.forEach((item) => {
+      let selectedValue = item.getAttribute('data-value');
+      this._setNativeMultipleOptions(selectedValue);
+    });
+
+    if (!selectedItemsLength) {
+       _msTitleText = this.ui.msPlaceholder[0].text
+    }  else if (selectedItemsLength === 1) {
+      _msTitleText = selectedItems[0].innerHTML;
+    } else if (selectedItemsLength < allItemsLength) {
+       _msTitleText = `${selectedItemsLength} ${this.settings.selectedSeparator} ${allItemsLength}`;
+    } else {
+      _msTitleText = this.settings.allSelectedPlaceholder;
+    }
+
+    return _msTitleText;
+  }
+
+  _clickEveryOptgroup() {
+      this.msOptgroups.forEach((optgroup) => {
+        optgroup.click();
+      });
+  }
+
   // Maybe later this func will be public for programmatically select all.
   _selectAll() {
     if (this.msSelectAll.classList.contains('ms-dropdown__select-all_active')) {
 
       if (this.settings.selectAllToggle) {
         this.msSelectAll.classList.remove('ms-dropdown__select-all_active');
+
+        if (this.msOptgroups && this.settings.optgroupsToggle) {
+          this._clickEveryOptgroup();
+        }
+
         this.msSelectAll.textContent = this.settings.selectAllText;
         this._clearNativeMultipleOptions();
         this.msItems.forEach((item) => {
@@ -317,6 +427,11 @@ export default class MultiSelector extends Component {
     }
 
     this.msSelectAll.classList.add('ms-dropdown__select-all_active');
+
+    if (this.msOptgroups) {
+      this._clickEveryOptgroup();
+    }
+
     this._clearNativeMultipleOptions();
     this.msItems.forEach((item) => {
       item.classList.add('ms-dropdown__item_active');
@@ -445,24 +560,3 @@ export default class MultiSelector extends Component {
   }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

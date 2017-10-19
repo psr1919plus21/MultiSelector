@@ -6,6 +6,34 @@
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="index.css">
+
+  <style>
+    .ms-loading {
+      min-height: 40px;
+      background: rgba(255,255,255,0);
+      border: 2px solid #444;
+      border-top-color: #999;
+      border-right-color: #999;
+      width: 40px;
+      display: block;
+      font-size: 0;
+      border-radius: 50%;
+      -webkit-appearance: none;
+      box-shadow: none;
+      animation: spin 2s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+
 </head>
 <body>
   <div class="header">
@@ -18,7 +46,7 @@
       <div class="ms-example__content">
         <h3>It's time to choose</h3>
         <div class="select-wrapper">
-          <select class="ms-select">
+          <select class="ms-select ms-loading">
             <option  value="" disabled selected>Select your turtle</option>
             <option value="donatello">Donatello</option>
             <option value="leonardo">Leonardo</option>
@@ -254,28 +282,3 @@
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

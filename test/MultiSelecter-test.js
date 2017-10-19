@@ -1,6 +1,8 @@
 import {expect} from 'chai';
 let beautify_html = require('js-beautify').html;
-let jsdom = require('jsdom').jsdom;
+let JSDOM = require('jsdom').JSDOM;
+let jsdom = new JSDOM();
+
 let MultiSelector = require('../src/app/components/MultiSelector').default;
 let plainSelect;
 let placeholderSelect;
@@ -9,7 +11,7 @@ let multipleSelectNoPlaceholder;
 let multipleSelectWithOptgroups;
 
 beforeEach(function() {
-  global.document = jsdom();
+  global.document = jsdom.window.document;
   _createPlainSelect();
   _createSelectWithPlaceholder();
   _createSelectMultiple();
@@ -211,6 +213,27 @@ describe('MultiSelector', function() {
     expect(expected).to.equal(actual);
   })
 
+  it('should keep placeholder static after select all by items if no toggle', function() {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelect,
+      settings: {
+        selectAll: true,
+        selectAllToggle: false,
+        selectAllText: 'Select all'
+      }
+    });
+
+    let selectAllBtn = selectorInstance.msSelectAll;
+    let selectItems = selectorInstance.msItems;
+    selectItems.forEach((item) => {
+      item.click();
+    });
+
+    let expected = 'Select all';
+    let actual = selectAllBtn.textContent;
+    expect(expected).to.equal(actual);
+  })
+
   it('shoud set placeholder to title after select all unselect (no placeholder select).', function() {
     let selectorInstance = new MultiSelector({
       el: multipleSelectNoPlaceholder,
@@ -222,7 +245,7 @@ describe('MultiSelector', function() {
     let selectAllBtn = selectorInstance.msSelectAll;
     selectAllBtn.click();
     selectAllBtn.click();
-    let expected = 'Select all';
+    let expected = selectorInstance.settings.placeholderText;
     let actual = selectorInstance.msTitleText.textContent;
     expect(expected).to.equal(actual);
   })
@@ -311,6 +334,163 @@ describe('MultiSelector', function() {
     expect(expected).to.equal(actual);
   })
 
+  it('shoud set select all title when all items select by optgroups', () => {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectWithOptgroups
+    });
+    let msOptgroups = selectorInstance.msOptgroups;
+    msOptgroups.forEach((optgroup) => optgroup.click());
+
+    let expected = selectorInstance.settings.allSelectedPlaceholder;
+    let actual = selectorInstance.msTitle.textContent;
+    expect(expected).to.equal(actual);
+  });
+
+  it('shoud set separate optgroups to selector title', () => {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectWithOptgroups,
+      settings: {
+        optgroupsSeparator: ' and '
+      }
+    });
+    let msOptgroups = selectorInstance.msOptgroups;
+    msOptgroups[0].click();
+    msOptgroups[1].click();
+
+    let expected = msOptgroups[0].textContent + ' and ' + msOptgroups[1].textContent
+    let actual = selectorInstance.msTitle.textContent;
+    expect(expected).to.equal(actual);
+  });
+
+  it('shoud set separate optgroups to selector title when unselect one of it', () => {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectWithOptgroups,
+    });
+    let msOptgroups = selectorInstance.msOptgroups;
+    // msOptgroups.forEach((optgroup) => optgroup.click());
+    msOptgroups[0].click();
+    msOptgroups[1].click();
+    msOptgroups[2].click();
+    msOptgroups[2].click();
+
+    let expected = msOptgroups[0].textContent + ', ' + msOptgroups[1].textContent
+    let actual = selectorInstance.msTitle.textContent;
+    expect(expected).to.equal(actual);
+  });
+
+  it('should show default title when optgroup unselected', () => {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectWithOptgroups
+    });
+
+    let msOptgroups = selectorInstance.msOptgroups;
+    msOptgroups[0].click();
+    msOptgroups[0].click();
+
+    let expected = selectorInstance.settings.placeholderText;
+    let actual = selectorInstance.msTitleText.innerHTML;
+    expect(expected).to.equal(actual);
+
+  });
+
+  it('should select group if all group items are selected', () => {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectWithOptgroups
+    });
+
+    let cats = selectorInstance.msOptgroupItems.cats;
+    cats.forEach((cat) => {
+      cat.click();
+    });
+
+    let expected = true;
+    let actual = selectorInstance.msOptgroups[0].classList.contains('ms-optgroup_active');
+    expect(expected).to.equal(actual);
+  });
+
+  it('should add item to title contains selected group', () => {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectWithOptgroups
+    });
+
+    let cats = selectorInstance.msOptgroupItems.cats;
+    let dogs = selectorInstance.msOptgroupItems.dogs;
+    cats.forEach((cat) => {
+      cat.click();
+    });
+    dogs[0].click();
+
+    let expected = 'cats and 1 more';
+    let actual = selectorInstance.msTitle.textContent;
+    expect(expected).to.equal(actual);
+  });
+
+  it('should select all groups by selectAll btn', () => {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectWithOptgroups,
+      settings: {
+        selectAll: true
+      }
+    });
+
+    let selectAllBtn = selectorInstance.msSelectAll;
+    selectAllBtn.click();
+
+    let expected = true;
+    let actual = Array.from(selectorInstance.msOptgroups).every((optgroup) => {
+      return optgroup.classList.contains('ms-optgroup_active');
+    });
+    expect(expected).to.equal(actual);
+  });
+
+  it('should unselect all groups by selectAll btn double click', () => {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectWithOptgroups,
+      settings: {
+        selectAll: true,
+        selectAllToggle: true
+      }
+    });
+
+    let selectAllBtn = selectorInstance.msSelectAll;
+    selectAllBtn.click();
+    selectAllBtn.click();
+
+    let expected = true;
+    let actual = Array.from(selectorInstance.msOptgroups).every((optgroup) => {
+      return !optgroup.classList.contains('ms-optgroup_active');
+    });
+    expect(expected).to.equal(actual);
+  });
+
+  it('should unselect selectAll button by unselect optgroup', () => {
+    let selectorInstance = new MultiSelector({
+      el: multipleSelectWithOptgroups,
+      settings: {
+        selectAll: true,
+        selectAllToggle: true
+      }
+    });
+
+    let selectAllBtn = selectorInstance.msSelectAll;
+    let optgroup = selectorInstance.msOptgroups[0];
+    selectAllBtn.click();
+    optgroup.click();
+
+    let expected = false;
+    let actual = selectAllBtn.classList.contains('ms-dropdown__select-all_active');
+    expect(expected).to.equal(actual);
+  });
+
+  it('should remove ms-loading class', () => {
+    let selectorInstance = new MultiSelector({
+      el: plainSelect
+    });
+
+    let expected = false;
+    let actual = selectorInstance.el.classList.contains('ms-loading');
+    expect(expected).to.equal(actual);
+  });
 
 });
 
@@ -318,6 +498,7 @@ function _createPlainSelect() {
   let selectData = ['Leonardo', 'Donatello', 'Michelangelo', 'Raphael'];
   let selectWrapper = document.createElement('div');
   plainSelect = document.createElement('select');
+  plainSelect.classList.add('ms-loading');
 
   selectData.forEach((item) => {
     let normalizedItem = item.trim().toLowerCase();
@@ -408,6 +589,10 @@ function _createSelectWithOptgroups() {
     {
       optgroupName: 'dogs   ',
       optgroupItems: ['Spyke', 'Bethoween', 'Scooby-Do', 'Bascerweil']
+    },
+    {
+      optgroupName: 'apes',
+      optgroupItems: ['Gorilla', 'Bonobo', 'HomoSapiens', 'Proconsule']
     }
 
   ];
@@ -434,41 +619,3 @@ function _createSelectWithOptgroups() {
 
   selectWrapper.appendChild(multipleSelectWithOptgroups);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
